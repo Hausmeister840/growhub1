@@ -127,6 +127,12 @@ a, button {
     box-shadow var(--gh-duration-medium) var(--gh-ease-standard);
 }
 
+button:active,
+[role="button"]:active,
+.gh-pressable:active {
+  transform: scale(0.97);
+}
+
 /* ── Scrollbar hiding ── */
 .hide-scrollbar::-webkit-scrollbar { display: none; }
 .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
@@ -241,6 +247,16 @@ a, button {
   border: 1px solid rgba(255,255,255,0.08);
 }
 
+.gh-sheet {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.01)),
+    rgba(14, 14, 18, 0.92);
+  box-shadow: 0 -24px 70px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(14px) saturate(130%);
+  -webkit-backdrop-filter: blur(14px) saturate(130%);
+}
+
 /* ── Animation helpers ── */
 @keyframes gh-fade-in {
   from { opacity: 0; transform: translateY(8px); }
@@ -332,4 +348,13 @@ a, button {
 
 @keyframes gh-spin {
   to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }

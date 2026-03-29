@@ -73,7 +73,8 @@ export default function CreateActionSheet({ isOpen, onClose, hasActiveGrows, onS
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[200] bg-black/85 backdrop-blur-md"
+          transition={{ duration: 0.18 }}
+          className="fixed inset-0 z-[200] bg-black/80 backdrop-blur-md"
           onClick={onClose}
         >
           <motion.div
@@ -81,7 +82,7 @@ export default function CreateActionSheet({ isOpen, onClose, hasActiveGrows, onS
             animate={{ y: 0 }}
             exit={{ y: '100%', opacity: 0.8 }}
             transition={{ type: 'spring', damping: 32, stiffness: 320, mass: 0.9 }}
-            className="absolute bottom-0 left-0 right-0 max-h-[92vh] overflow-y-auto bg-gradient-to-b from-[#1f2127] via-[#17181d] to-[#131419] rounded-t-[30px] border-t border-white/[0.09] pb-safe shadow-[0_-20px_80px_rgba(0,0,0,0.45)]"
+            className="absolute bottom-0 left-0 right-0 max-h-[92vh] overflow-y-auto gh-sheet rounded-t-[30px] pb-safe"
             onClick={e => e.stopPropagation()}
           >
             <div className="sticky top-0 z-10 bg-gradient-to-b from-[#1f2127] to-transparent pt-3 pb-2">
@@ -104,7 +105,7 @@ export default function CreateActionSheet({ isOpen, onClose, hasActiveGrows, onS
                 <motion.button
                   whileTap={{ scale: 0.98 }}
                   onClick={() => handleAction(primaryAction.id)}
-                  className="group relative w-full overflow-hidden rounded-[20px] border border-cyan-400/35 bg-gradient-to-r from-cyan-500/18 via-cyan-400/8 to-emerald-400/14 p-4 text-left transition-colors hover:border-cyan-300/50"
+                  className="gh-pressable group relative w-full overflow-hidden rounded-[20px] border border-cyan-400/35 bg-gradient-to-r from-cyan-500/18 via-cyan-400/8 to-emerald-400/14 p-4 text-left transition-colors hover:border-cyan-300/50"
                 >
                   <div className="absolute -right-6 -top-6 h-20 w-20 rounded-full bg-cyan-300/12 blur-2xl" />
                   <div className="relative flex items-center gap-3">
@@ -140,7 +141,7 @@ export default function CreateActionSheet({ isOpen, onClose, hasActiveGrows, onS
                           key={action.id}
                           whileTap={{ scale: 0.98 }}
                           onClick={() => handleAction(action.id)}
-                          className="group w-full flex items-center gap-3 p-3.5 rounded-[16px] bg-white/[0.03] border border-white/[0.06] hover:bg-white/[0.05] transition-colors"
+                          className="gh-pressable group w-full flex items-center gap-3 p-3.5 rounded-[16px] bg-white/[0.03] border border-white/[0.06] hover:bg-white/[0.05] transition-colors"
                         >
                           <div className={`w-10 h-10 rounded-xl bg-white/[0.05] border border-white/[0.07] flex items-center justify-center text-xl flex-shrink-0`}>
                             {action.emoji || (Icon && <Icon className={`w-4.5 h-4.5 ${action.color}`} />)}
@@ -168,7 +169,7 @@ export default function CreateActionSheet({ isOpen, onClose, hasActiveGrows, onS
                           key={action.id}
                           whileTap={{ scale: 0.98 }}
                           onClick={() => handleAction(action.id)}
-                          className="group w-full flex items-center gap-3 p-3.5 rounded-[16px] bg-white/[0.03] border border-white/[0.06] hover:bg-white/[0.05] transition-colors"
+                          className="gh-pressable group w-full flex items-center gap-3 p-3.5 rounded-[16px] bg-white/[0.03] border border-white/[0.06] hover:bg-white/[0.05] transition-colors"
                         >
                           <div className="w-10 h-10 rounded-xl bg-white/[0.05] border border-white/[0.07] flex items-center justify-center text-xl flex-shrink-0">
                             {action.emoji || (Icon && <Icon className={`w-4.5 h-4.5 ${action.color}`} />)}
@@ -196,7 +197,7 @@ export default function CreateActionSheet({ isOpen, onClose, hasActiveGrows, onS
             <div className="px-4 pb-4">
               <button
                 onClick={onClose}
-                className="w-full py-3.5 bg-white/[0.04] hover:bg-white/[0.07] border border-white/[0.08] rounded-[16px] text-sm font-medium text-[var(--gh-text-secondary)] transition-colors"
+                className="gh-pressable w-full py-3.5 bg-white/[0.04] hover:bg-white/[0.07] border border-white/[0.08] rounded-[16px] text-sm font-medium text-[var(--gh-text-secondary)] transition-colors"
               >
                 Abbrechen
               </button>

@@ -84,8 +84,9 @@ export default function MobileMenu({ isOpen, onClose, user }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            transition={{ duration: 0.18 }}
             onClick={handleBackdropClick}
-            className="fixed inset-0 bg-black/90 z-[200]"
+            className="fixed inset-0 bg-black/82 backdrop-blur-sm z-[200]"
             style={{ touchAction: 'none' }}
           />
           {/* solid dark overlay, no glass blur */}
@@ -96,11 +97,11 @@ export default function MobileMenu({ isOpen, onClose, user }) {
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-            className="fixed top-0 right-0 bottom-0 w-[82vw] max-w-sm bg-[var(--gh-bg-elevated)] border-l border-white/[0.06] z-[201] overflow-y-auto"
+            className="fixed top-0 right-0 bottom-0 w-[82vw] max-w-sm gh-sheet border-l border-white/[0.1] z-[201] overflow-y-auto"
             style={{ touchAction: 'pan-y' }}
           >
             {/* Header */}
-            <div className="sticky top-0 bg-[var(--gh-bg-elevated)] border-b border-white/[0.04] z-10">
+            <div className="sticky top-0 bg-black/35 border-b border-white/[0.08] z-10 backdrop-blur-lg">
               <div className="flex items-center justify-between p-4">
                 <div>
                   <h2 className="text-base font-semibold text-white">Menü</h2>
@@ -110,7 +111,7 @@ export default function MobileMenu({ isOpen, onClose, user }) {
                 </div>
                 <button
                   onClick={handleCloseClick}
-                  className="w-8 h-8 rounded-full bg-white/[0.04] hover:bg-white/[0.08] flex items-center justify-center text-[var(--gh-text-muted)] hover:text-white transition-all"
+                  className="gh-pressable w-8 h-8 rounded-full bg-white/[0.04] hover:bg-white/[0.08] flex items-center justify-center text-[var(--gh-text-muted)] hover:text-white transition-all"
                   aria-label="Menü schließen"
                   type="button"
                 >
@@ -134,7 +135,7 @@ export default function MobileMenu({ isOpen, onClose, user }) {
                           key={itemIdx}
                           to={item.path}
                           onClick={onClose}
-                          className="flex items-center gap-3 px-3 py-2.5 rounded-[var(--gh-radius-md)] text-[var(--gh-text-secondary)] hover:bg-white/[0.04] hover:text-white transition-all group text-sm"
+                          className="gh-pressable flex items-center gap-3 px-3 py-2.5 rounded-[var(--gh-radius-md)] text-[var(--gh-text-secondary)] hover:bg-white/[0.04] hover:text-white transition-all group text-sm"
                         >
                           <Icon className="w-[18px] h-[18px] text-[var(--gh-text-muted)] group-hover:text-[var(--gh-accent)] transition-colors" strokeWidth={1.6} />
                           <span className="font-medium">{item.label}</span>
@@ -149,7 +150,7 @@ export default function MobileMenu({ isOpen, onClose, user }) {
               <div className="pt-2 border-t border-white/[0.04]">
                 <button
                   onClick={handleLogout}
-                  className="w-full flex items-center gap-3 px-3 py-2.5 rounded-[var(--gh-radius-md)] text-[var(--gh-error)] hover:bg-red-500/[0.06] transition-all text-sm"
+                  className="gh-pressable w-full flex items-center gap-3 px-3 py-2.5 rounded-[var(--gh-radius-md)] text-[var(--gh-error)] hover:bg-red-500/[0.06] transition-all text-sm"
                   type="button"
                 >
                   <LogOut className="w-[18px] h-[18px]" strokeWidth={1.6} />

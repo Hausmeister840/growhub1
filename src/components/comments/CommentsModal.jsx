@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { Drawer as DrawerPrimitive } from 'vaul';
 import { Loader2, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -6,6 +6,9 @@ import CommentItem from './CommentItem';
 import CommentInput from './CommentInput';
 import { base44 } from '@/api/base44Client';
 import { toast } from 'sonner';
+
+const COMMENTS_CACHE_TTL_MS = 30 * 1000;
+const commentsCache = new Map();
 
 export default function CommentsModal({
   isOpen,
@@ -29,6 +32,30 @@ export default function CommentsModal({
 
   const loadComments = useCallback(async () => {
     if (!post?.id) return;
+
+    const cacheKey = post.id;
+    const cached = commentsCache.get(cacheKey);
+    const cacheIsFresh = cached && (Date.now() - cached.ts) < COMMENTS_CACHE_TTL_MS;
+
+    if (cacheIsFresh) {
+      const mergedUsers = { ...(cached.users || {}) };
+      if (currentUser?.email) {
+        mergedUsers[currentUser.email] = {
+          ...(mergedUsers[currentUser.email] || {}),
+          id: currentUser.id,
+          email: currentUser.email,
+          full_name: currentUser.full_name,
+          username: currentUser.username,
+          avatar_url: currentUser.avatar_url,
+          verified: currentUser.verified,
+        };
+      }
+      setComments(cached.comments || []);
+      setUsers(mergedUsers);
+      setIsLoading(false);
+      setLoadError(false);
+      return;
+    }
 
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
@@ -68,6 +95,11 @@ export default function CommentsModal({
 
       setComments(commentsData || []);
       setUsers(userMap);
+      commentsCache.set(cacheKey, {
+        comments: commentsData || [],
+        users: userMap,
+        ts: Date.now()
+      });
       setLoadError(false);
     } catch (error) {
       if (abortControllerRef.current?.signal.aborted) return;
@@ -228,16 +260,24 @@ export default function CommentsModal({
     e.target.style.height = e.target.scrollHeight + 'px';
   }, []);
 
-  const topLevelComments = comments.filter(c => !c.parent_comment_id);
-  const repliesByParent = {};
-  comments.forEach(c => {
-    if (c.parent_comment_id) {
-      if (!repliesByParent[c.parent_comment_id]) {
-        repliesByParent[c.parent_comment_id] = [];
+  const { topLevelComments, repliesByParent } = useMemo(() => {
+    const topLevel = [];
+    const replies = {};
+
+    comments.forEach((c) => {
+      if (!c.parent_comment_id) {
+        topLevel.push(c);
+        return;
       }
-      repliesByParent[c.parent_comment_id].push(c);
-    }
-  });
+
+      if (!replies[c.parent_comment_id]) {
+        replies[c.parent_comment_id] = [];
+      }
+      replies[c.parent_comment_id].push(c);
+    });
+
+    return { topLevelComments: topLevel, repliesByParent: replies };
+  }, [comments]);
 
   return (
     <DrawerPrimitive.Root
