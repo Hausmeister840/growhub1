@@ -189,8 +189,9 @@ export default function Layout({ children, currentPageName }) {
             <ContextMenuProvider>
             <div className="min-h-[calc(var(--vh,1vh)*100)] bg-background text-foreground relative overflow-x-clip">
             <div className="pointer-events-none absolute inset-0 opacity-70">
-              <div className="absolute -top-24 left-[22%] h-[420px] w-[420px] rounded-full bg-green-500/10 blur-[120px]" />
-              <div className="absolute top-[30%] -right-24 h-[320px] w-[320px] rounded-full bg-emerald-400/8 blur-[120px]" />
+              <div className="absolute -top-24 left-[18%] h-[440px] w-[440px] rounded-full bg-green-500/11 blur-[120px]" />
+              <div className="absolute top-[32%] -right-24 h-[340px] w-[340px] rounded-full bg-emerald-400/10 blur-[120px]" />
+              <div className="absolute -bottom-24 left-[36%] h-[300px] w-[300px] rounded-full bg-blue-500/8 blur-[130px]" />
             </div>
             {showNav && (
               <DesktopNav user={user} currentPageName={currentPageName} />

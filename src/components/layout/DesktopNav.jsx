@@ -39,9 +39,9 @@ export default function DesktopNav({ user, currentPageName }) {
 
   return (
     <>
-      <div className="hidden lg:flex fixed top-0 left-0 bottom-0 w-[280px] gh-glass border-r border-white/[0.08] flex-col z-50 shadow-[0_0_80px_rgba(0,0,0,0.6)]">
+      <div className="hidden lg:flex fixed top-0 left-0 bottom-0 w-[286px] gh-glass border-r border-white/[0.1] flex-col z-50 shadow-[0_20px_90px_rgba(0,0,0,0.62)]">
         {/* Logo */}
-        <div className="px-6 pt-7 pb-5">
+        <div className="px-6 pt-8 pb-5">
           <GrowHubLogo />
         </div>
 
@@ -49,7 +49,7 @@ export default function DesktopNav({ user, currentPageName }) {
         <div className="px-4 mb-3">
           <button
             onClick={() => setShowSearch(true)}
-            className="w-full flex items-center gap-2.5 px-3 py-2.5 bg-white/[0.03] border border-white/[0.1] rounded-[14px] text-sm text-[var(--gh-text-muted)] hover:text-[var(--gh-text-secondary)] hover:border-white/[0.2] hover:bg-white/[0.07] transition-all"
+            className="w-full flex items-center gap-2.5 px-3 py-2.5 bg-white/[0.03] border border-white/[0.12] rounded-[14px] text-sm text-[var(--gh-text-muted)] hover:text-[var(--gh-text-secondary)] hover:border-white/[0.28] hover:bg-white/[0.08] transition-all"
           >
             <Search className="w-4 h-4 flex-shrink-0" />
             <span>Suche...</span>
@@ -62,7 +62,7 @@ export default function DesktopNav({ user, currentPageName }) {
           <motion.button
             whileTap={{ scale: 0.97 }}
             onClick={() => setShowActionSheet(true)}
-            className="w-full py-2.5 gh-btn-primary flex items-center justify-center gap-2 text-sm shadow-[0_8px_30px_rgba(34,197,94,0.3)]"
+            className="w-full py-2.5 gh-btn-primary flex items-center justify-center gap-2 text-sm shadow-[0_12px_34px_rgba(34,197,94,0.35)]"
           >
             <Plus className="w-4 h-4" strokeWidth={2.5} />
             Erstellen
@@ -70,7 +70,7 @@ export default function DesktopNav({ user, currentPageName }) {
         </div>
 
         {/* Main Nav */}
-        <div className="flex-1 overflow-y-auto px-3 space-y-1 pb-4">
+        <div className="flex-1 overflow-y-auto px-3 space-y-1 pb-4 custom-scrollbar">
           <p className="text-[10px] font-semibold text-[var(--gh-text-subtle)] uppercase tracking-[0.18em] px-3 mb-2 mt-1">Navigation</p>
           {NAV_ITEMS.map((item) => {
             const Icon = item.icon;
@@ -81,8 +81,8 @@ export default function DesktopNav({ user, currentPageName }) {
                 to={`/${item.path}`}
                 className={`flex items-center gap-3 px-3 py-2.5 rounded-[14px] transition-all text-sm font-medium ${
                   isActive
-                    ? 'bg-gradient-to-r from-[var(--gh-accent)]/22 to-emerald-400/12 text-[var(--gh-accent)] border border-[var(--gh-accent)]/28 shadow-[0_8px_30px_rgba(34,197,94,0.16)]'
-                    : 'text-[var(--gh-text-secondary)] hover:bg-white/[0.07] hover:text-white border border-transparent'
+                    ? 'bg-gradient-to-r from-[var(--gh-accent)]/24 to-emerald-300/15 text-[var(--gh-accent)] border border-[var(--gh-accent)]/30 shadow-[0_10px_28px_rgba(34,197,94,0.18)]'
+                    : 'text-[var(--gh-text-secondary)] hover:bg-white/[0.08] hover:text-white border border-transparent'
                 }`}
               >
                 <Icon className={`w-[18px] h-[18px] flex-shrink-0 ${isActive ? 'text-[var(--gh-accent)]' : ''}`} strokeWidth={isActive ? 2 : 1.6} />
@@ -101,8 +101,8 @@ export default function DesktopNav({ user, currentPageName }) {
                 to={`/${item.path}`}
                 className={`flex items-center gap-3 px-3 py-2.5 rounded-[14px] transition-all text-sm font-medium ${
                   isActive
-                    ? 'bg-gradient-to-r from-[var(--gh-accent)]/22 to-emerald-400/12 text-[var(--gh-accent)] border border-[var(--gh-accent)]/28 shadow-[0_8px_30px_rgba(34,197,94,0.16)]'
-                    : 'text-[var(--gh-text-secondary)] hover:bg-white/[0.07] hover:text-white border border-transparent'
+                    ? 'bg-gradient-to-r from-[var(--gh-accent)]/24 to-emerald-300/15 text-[var(--gh-accent)] border border-[var(--gh-accent)]/30 shadow-[0_10px_28px_rgba(34,197,94,0.18)]'
+                    : 'text-[var(--gh-text-secondary)] hover:bg-white/[0.08] hover:text-white border border-transparent'
                 }`}
               >
                 <div className="relative flex-shrink-0">
@@ -116,7 +116,7 @@ export default function DesktopNav({ user, currentPageName }) {
         </div>
 
         {/* User Footer */}
-        <div className="border-t border-white/[0.08] p-3 bg-white/[0.01]">
+        <div className="border-t border-white/[0.1] p-3 bg-white/[0.02]">
           {user ? (
             <>
               <button

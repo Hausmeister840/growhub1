@@ -145,8 +145,8 @@ export default function MobileBottomNav({ user, currentPageName, hidden }) {
       {/* Top border glow */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/[0.08] to-transparent" />
       
-      <div className="gh-glass border-t border-white/[0.08] pb-safe">
-        <div className="flex items-center justify-around h-[62px] px-1">
+      <div className="gh-glass border-t border-white/[0.1] pb-safe">
+        <div className="flex items-center justify-around h-[64px] px-1">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = currentPageName === item.name ||
@@ -160,7 +160,7 @@ export default function MobileBottomNav({ user, currentPageName, hidden }) {
                   whileTap={{ scale: 0.88 }}
                   className="flex items-center justify-center w-14 h-14 -mt-5">
 
-                  <div className="bg-gradient-to-br opacity-50 rounded-2xl w-14 h-14 from-green-400 to-green-600 flex items-center justify-center shadow-xl shadow-green-500/40 ring-2 ring-green-500/20 ring-offset-2 ring-offset-black">
+                  <div className="bg-gradient-to-br rounded-2xl w-14 h-14 from-green-400 to-green-600 flex items-center justify-center shadow-xl shadow-green-500/45 ring-2 ring-green-400/30 ring-offset-2 ring-offset-black">
                     <Icon className="w-7 h-7 text-black" strokeWidth={2.5} />
                   </div>
                 </motion.button>);
@@ -172,7 +172,7 @@ export default function MobileBottomNav({ user, currentPageName, hidden }) {
                 key={item.name}
                 to={item.path}
                 onClick={(e) => handleTabPress(e, item)}
-                className="relative flex flex-col items-center justify-center flex-1 h-full py-1">
+                className="relative flex flex-col items-center justify-center flex-1 h-full py-1.5">
 
                 <motion.div
                   whileTap={{ scale: 0.85 }}
@@ -180,7 +180,7 @@ export default function MobileBottomNav({ user, currentPageName, hidden }) {
 
                   {item.name === 'Reels' ? (
                     <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${
-                    isActive ? 'bg-white' : 'bg-white/[0.08] border border-white/[0.12]'}`
+                    isActive ? 'bg-white shadow-[0_4px_16px_rgba(255,255,255,0.22)]' : 'bg-white/[0.08] border border-white/[0.12]'}`
                     }>
                       <Play className={`w-3.5 h-3.5 ml-0.5 ${isActive ? 'text-black fill-black' : 'text-[var(--gh-text-muted)] fill-[var(--gh-text-muted)]'}`} />
                     </div>
