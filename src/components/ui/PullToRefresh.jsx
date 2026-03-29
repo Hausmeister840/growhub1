@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import { RefreshCw } from 'lucide-react';
 import { motion } from 'framer-motion';
 
@@ -10,7 +10,18 @@ export default function PullToRefresh({ onRefresh, children }) {
   const startX = useRef(0);
   const isActive = useRef(false);
   const directionLocked = useRef(null); // 'vertical' | 'horizontal' | null
+  const pullAmountRef = useRef(0);
+  const rafRef = useRef(null);
   const threshold = 80;
+
+  const flushPullToState = useCallback(() => {
+    rafRef.current = null;
+    setPullDistance(pullAmountRef.current);
+  }, []);
+
+  useEffect(() => () => {
+    if (rafRef.current) cancelAnimationFrame(rafRef.current);
+  }, []);
 
   const handleTouchStart = useCallback((e) => {
     // Only activate when at top of page and not refreshing
@@ -27,6 +38,7 @@ export default function PullToRefresh({ onRefresh, children }) {
     // If user scrolled down since touch start, cancel
     if (window.scrollY > 5) {
       isActive.current = false;
+      pullAmountRef.current = 0;
       setPullDistance(0);
       return;
     }
@@ -45,26 +57,37 @@ export default function PullToRefresh({ onRefresh, children }) {
     }
 
     e.preventDefault();
-    setPullDistance(Math.min(dy, threshold * 1.5));
-  }, [isRefreshing]);
+    pullAmountRef.current = Math.min(dy, threshold * 1.5);
+    if (rafRef.current == null) {
+      rafRef.current = requestAnimationFrame(flushPullToState);
+    }
+  }, [isRefreshing, flushPullToState]);
 
   const handleTouchEnd = useCallback(async () => {
-    if (!isActive.current) return;
+    if (rafRef.current) {
+      cancelAnimationFrame(rafRef.current);
+      rafRef.current = null;
+    }
+
+    const wasActive = isActive.current;
     isActive.current = false;
     directionLocked.current = null;
-    
-    if (pullDistance >= threshold && !isRefreshing) {
+
+    const finalPull = pullAmountRef.current;
+    pullAmountRef.current = 0;
+    setPullDistance(0);
+
+    if (!wasActive) return;
+
+    if (finalPull >= threshold && !isRefreshing) {
       setIsRefreshing(true);
-      setPullDistance(0);
       try {
         await onRefresh?.();
       } finally {
         setIsRefreshing(false);
       }
-    } else {
-      setPullDistance(0);
     }
-  }, [pullDistance, isRefreshing, onRefresh]);
+  }, [isRefreshing, onRefresh]);
 
   const rotation = Math.min((pullDistance / threshold) * 360, 360);
   const opacity = Math.min(pullDistance / threshold, 1);
@@ -114,7 +137,16 @@ export default function PullToRefresh({ onRefresh, children }) {
         </div>
       )}
       
-      <div style={{ transform: `translateY(${Math.min(pullDistance * 0.4, threshold * 0.4)}px)` }}>
+      <div
+        style={
+          pullDistance > 0
+            ? {
+                transform: `translateY(${Math.min(pullDistance * 0.4, threshold * 0.4)}px)`,
+                willChange: 'transform',
+              }
+            : undefined
+        }
+      >
         {children}
       </div>
     </div>

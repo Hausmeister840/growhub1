@@ -9,6 +9,12 @@ html, body {
   -webkit-tap-highlight-color: transparent;
 }
 
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
 /* Selection behavior */
 button, a, nav, label,
 [role="button"], [role="navigation"], [role="tab"], [role="tablist"], [role="menuitem"],

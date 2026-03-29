@@ -20,6 +20,7 @@ export default function useChatStore() {
   const [conversations, setConversations] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState(null);
   const initRef = useRef(false);
 
   const userMap = useMemo(() => buildUserLookup(allUsers), [allUsers]);
@@ -55,11 +56,18 @@ export default function useChatStore() {
         setCurrentUser(normalizedCurrentUser);
         setAllUsers((prev) => mergeUsers(prev, [normalizedCurrentUser]));
 
-        const convos = await base44.entities.Conversation.list('-updated_date', 100);
-
-        if (!active) return;
-        setConversations(convos || []);
-        await syncConversationUsers(convos || [], [normalizedCurrentUser]);
+        try {
+          const convos = await base44.entities.Conversation.list('-updated_date', 100);
+          if (!active) return;
+          setLoadError(null);
+          setConversations(convos || []);
+          await syncConversationUsers(convos || [], [normalizedCurrentUser]);
+        } catch (convErr) {
+          console.error('Conversation list failed:', convErr);
+          if (!active) return;
+          setConversations([]);
+          setLoadError('Chats konnten nicht geladen werden. Bitte Verbindung prüfen und erneut versuchen.');
+        }
       } catch (err) {
         console.error('Chat store init error:', err);
         if (!active) return;
@@ -161,12 +169,27 @@ export default function useChatStore() {
     [conversations, currentUser?.id]
   );
 
+  const refetchConversations = useCallback(async () => {
+    if (!currentUser) return;
+    setLoadError(null);
+    try {
+      const convos = await base44.entities.Conversation.list('-updated_date', 100);
+      setConversations(convos || []);
+      await syncConversationUsers(convos || [], [currentUser]);
+    } catch (e) {
+      console.error('Conversation refetch failed:', e);
+      setLoadError('Chats konnten nicht geladen werden. Bitte Verbindung prüfen und erneut versuchen.');
+    }
+  }, [currentUser, syncConversationUsers]);
+
   return {
     currentUser,
     conversations,
     allUsers,
     userMap,
     isLoading,
+    loadError,
+    refetchConversations,
     totalUnread,
     findUserById,
     findUserByEmail,

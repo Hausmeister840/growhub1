@@ -97,7 +97,7 @@ export default function SwipeTabs({ activeIndex, onChangeIndex, children }) {
         style={{
           transform: `translateX(calc(${translateX}% + ${pxOffset}px))`,
           transition: pxOffset === 0 ? 'transform 0.3s cubic-bezier(0.25, 0.1, 0.25, 1)' : 'none',
-          willChange: 'transform',
+          willChange: pxOffset !== 0 || isAnimating ? 'transform' : undefined,
         }}
       >
         {React.Children.map(children, (child, i) => (

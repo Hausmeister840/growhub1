@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { Search, Plus, MessageCircle, X, Sparkles } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { toast } from 'sonner';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import useChatStore from '@/components/chat/useChatStore';
 import ConversationList from '@/components/chat/ConversationList';
 import ChatView from '@/components/chat/ChatView';

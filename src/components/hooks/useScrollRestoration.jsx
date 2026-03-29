@@ -29,7 +29,11 @@ export function useScrollRestoration(key = 'default') {
     if (savedPosition) {
       // Delay to ensure content is loaded
       requestAnimationFrame(() => {
-        window.scrollTo(0, parseInt(savedPosition, 10));
+        window.scrollTo({
+          top: parseInt(savedPosition, 10),
+          left: 0,
+          behavior: 'auto',
+        });
       });
     }
   }, [location.pathname, key]);

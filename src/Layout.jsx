@@ -66,9 +66,11 @@ export default function Layout({ children, currentPageName }) {
     // Restore scroll of the page we're entering (after paint)
     if (SCROLL_PERSIST_TABS.includes(currentPageName) && scrollPositions[currentPageName] != null) {
       const saved = scrollPositions[currentPageName];
-      requestAnimationFrame(() => { window.scrollTo(0, saved); });
+      requestAnimationFrame(() => {
+        window.scrollTo({ top: saved, left: 0, behavior: 'auto' });
+      });
     } else if (!SCROLL_PERSIST_TABS.includes(currentPageName)) {
-      window.scrollTo(0, 0);
+      window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
     }
 
     prevPageRef.current = currentPageName;
