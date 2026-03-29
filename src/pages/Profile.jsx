@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { base44 } from '@/api/base44Client';
 import { Button } from "@/components/ui/button";
-import { Grid, Sprout, Trophy, AlertTriangle, Loader2, Leaf } from "lucide-react";
+import { Grid, Sprout, Trophy, AlertTriangle, Loader2, Leaf, RefreshCw } from "lucide-react";
 import { toast } from "sonner";
 import { AnimatePresence } from "framer-motion";
 import { usePost } from "../components/hooks/usePost";
@@ -58,6 +58,7 @@ export default function Profile() {
   const [error, setError] = useState(null);
   const [hasMorePosts, setHasMorePosts] = useState(true);
   const [postsPage, setPostsPage] = useState(1);
+  const [profileReloadKey, setProfileReloadKey] = useState(0);
 
   const profileUserRef = useRef(null);
   const location = useLocation();
@@ -142,7 +143,7 @@ export default function Profile() {
       navigate('/Feed');
     }
     return () => { cancelled = true; };
-  }, [authChecked, currentUser, profileIdOrEmail]);
+  }, [authChecked, currentUser, profileIdOrEmail, profileReloadKey, navigate]);
 
   // Load posts
   const loadPosts = useCallback(async (reset = false) => {
@@ -221,20 +222,40 @@ export default function Profile() {
   const canViewAchievements = canViewSection(profileUser?.show_achievements || 'public', isOwnProfile, isFollowing);
   const showFollowersList = isOwnProfile || (profileUser?.show_followers_list !== false);
 
-  if (isLoading) return <div className="min-h-screen bg-black"><ProfileSkeleton /></div>;
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-black" role="status" aria-live="polite" aria-busy="true">
+        <ProfileSkeleton />
+      </div>
+    );
+  }
 
   if (error && !profileUser) {
+    const canRetry = error.title === 'Fehler beim Laden';
     return (
       <div className="min-h-screen bg-black flex items-center justify-center p-6">
-        <div className="text-center max-w-sm">
-          <div className="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
-            <AlertTriangle className="w-8 h-8 text-red-500" />
+        <div className="gh-content-section max-w-md w-full p-8 text-center space-y-4">
+          <div className="w-16 h-16 bg-amber-500/10 rounded-2xl border border-amber-500/20 flex items-center justify-center mx-auto">
+            <AlertTriangle className="w-8 h-8 text-amber-400" />
           </div>
-          <h2 className="text-xl font-bold text-white mb-2">{error.title}</h2>
-          <p className="text-zinc-400 text-sm mb-6">{error.message}</p>
-          <div className="flex gap-2 justify-center">
-            <Button onClick={() => navigate('/Feed')} className="bg-green-600 hover:bg-green-700">Zum Feed</Button>
-            <Button onClick={() => navigate(-1)} variant="outline">Zurück</Button>
+          <h2 className="text-xl font-bold text-white">{error.title}</h2>
+          <p className="text-zinc-400 text-sm leading-relaxed">{error.message}</p>
+          <div className="flex flex-col sm:flex-row gap-2 justify-center pt-2">
+            {canRetry ? (
+              <Button
+                onClick={() => setProfileReloadKey((k) => k + 1)}
+                className="bg-green-600 hover:bg-green-700 gap-2"
+              >
+                <RefreshCw className="w-4 h-4" />
+                Erneut versuchen
+              </Button>
+            ) : null}
+            <Button onClick={() => navigate('/Feed')} variant={canRetry ? 'outline' : 'default'} className={canRetry ? '' : 'bg-green-600 hover:bg-green-700'}>
+              Zum Feed
+            </Button>
+            <Button onClick={() => navigate(-1)} variant="outline">
+              Zurück
+            </Button>
           </div>
         </div>
       </div>

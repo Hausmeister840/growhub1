@@ -624,9 +624,40 @@ export default function Map() {
   const [communitySpots, setCommunitySpots] = useState([]);
   const [ratingSpot, setRatingSpot] = useState(null);
   const [routePath, setRoutePath] = useState(null);
+  const [mapLoadError, setMapLoadError] = useState(null);
   const watchIdRef = useRef(null);
 
-  // Load user & data
+  const loadMapData = useCallback(async () => {
+    setMapLoadError(null);
+    try {
+      const [cRes, zRes, sRes] = await Promise.allSettled([
+        base44.entities.Club.list('-created_date', 500),
+        base44.entities.NoGoZone.list('-created_date', 500),
+        base44.entities.CommunitySpot.filter({ status: 'approved' }, '-created_date', 200),
+      ]);
+      const nextClubs = cRes.status === 'fulfilled' ? (cRes.value || []) : [];
+      const nextZones = zRes.status === 'fulfilled' ? (zRes.value || []) : [];
+      const nextSpots = sRes.status === 'fulfilled' ? (sRes.value || []) : [];
+      setClubs(nextClubs);
+      setZones(nextZones);
+      setCommunitySpots(nextSpots);
+
+      const allFailed = cRes.status === 'rejected' && zRes.status === 'rejected' && sRes.status === 'rejected';
+      if (allFailed) {
+        setMapLoadError('Kartendaten konnten nicht geladen werden. Bitte Verbindung prüfen und erneut versuchen.');
+        return;
+      }
+      const anyFailed = cRes.status === 'rejected' || zRes.status === 'rejected' || sRes.status === 'rejected';
+      if (anyFailed) {
+        toast.warning('Einige Kartenebenen konnten nicht geladen werden.');
+      }
+    } catch (e) {
+      console.error('Map data load failed:', e);
+      setMapLoadError('Kartendaten konnten nicht geladen werden. Bitte erneut versuchen.');
+    }
+  }, []);
+
+  // Load user & map layers
   useEffect(() => {
     const init = async () => {
       try {
@@ -636,22 +667,10 @@ export default function Map() {
       } catch {
         setCurrentUser(null);
       }
-
-      try {
-        const [fetchedClubs, fetchedZones, fetchedSpots] = await Promise.all([
-          base44.entities.Club.list('-created_date', 500).catch(() => []),
-          base44.entities.NoGoZone.list('-created_date', 500).catch(() => []),
-          base44.entities.CommunitySpot.filter({ status: 'approved' }, '-created_date', 200).catch(() => []),
-        ]);
-        setClubs(fetchedClubs || []);
-        setZones(fetchedZones || []);
-        setCommunitySpots(fetchedSpots || []);
-      } catch (error) {
-        console.error('Failed to load data:', error);
-      }
+      await loadMapData();
     };
     init();
-  }, []);
+  }, [loadMapData]);
 
   // Check zone status
   const checkZoneStatus = useCallback(async (lat, lng) => {
@@ -925,7 +944,21 @@ export default function Map() {
   return (
     <div className="relative w-full h-screen bg-black">
       {/* Back Button + Search Bar */}
-      <div className="fixed top-12 left-0 right-0 z-[1001] px-3">
+      <div className="fixed top-12 left-0 right-0 z-[1001] px-3 space-y-2">
+        {mapLoadError && (
+          <div className="max-w-lg mx-auto rounded-2xl border border-amber-500/30 bg-amber-500/10 backdrop-blur-xl px-3 py-2.5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+            <p className="text-xs text-amber-100">{mapLoadError}</p>
+            <Button
+              type="button"
+              size="sm"
+              variant="secondary"
+              className="shrink-0 h-8 text-xs bg-amber-500/20 text-amber-50 hover:bg-amber-500/30 border-0"
+              onClick={() => loadMapData()}
+            >
+              Erneut versuchen
+            </Button>
+          </div>
+        )}
         <div className="flex items-center gap-2 max-w-lg mx-auto">
           <button
             onClick={() => window.history.back()}

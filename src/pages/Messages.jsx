@@ -22,10 +22,11 @@ export default function Messages() {
 
   const {
     currentUser, conversations, allUsers, userMap,
-    isLoading, totalUnread,
+    isLoading, loadError, refetchConversations, totalUnread,
     getOtherParticipant, findExistingDirectChat, findOrFetchUser,
     addConversation, updateConversation,
   } = useChatStore();
+  const reduceMotion = useReducedMotion();
 
   const [selectedChatId, setSelectedChatId] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -123,7 +124,7 @@ export default function Messages() {
 
   if (isLoading) {
     return (
-      <div className="h-screen bg-black flex items-center justify-center">
+      <div className="h-screen bg-black flex items-center justify-center" role="status" aria-live="polite" aria-busy="true">
         <div className="w-7 h-7 border-2 border-green-500 border-t-transparent rounded-full animate-spin" />
       </div>
     );
@@ -141,8 +142,9 @@ export default function Messages() {
               <h1 className="text-[22px] font-extrabold text-white tracking-tight">Chats</h1>
               {totalUnread > 0 && (
                 <motion.span
-                  initial={{ scale: 0 }}
+                  initial={reduceMotion ? false : { scale: 0 }}
                   animate={{ scale: 1 }}
+                  transition={reduceMotion ? { duration: 0 } : undefined}
                   className="min-w-[22px] h-[22px] px-1.5 bg-green-500 text-black text-[11px] font-bold rounded-full flex items-center justify-center"
                 >
                   {totalUnread > 99 ? '99+' : totalUnread}
@@ -210,6 +212,19 @@ export default function Messages() {
         {/* Divider */}
         <div className="h-px bg-gradient-to-r from-transparent via-zinc-800 to-transparent mx-4 mt-1" />
 
+        {loadError && (
+          <div className="mx-4 mt-2 mb-1 rounded-2xl border border-amber-500/25 bg-amber-500/10 px-3 py-2.5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+            <p className="text-xs text-amber-100">{loadError}</p>
+            <button
+              type="button"
+              onClick={() => refetchConversations()}
+              className="shrink-0 rounded-lg bg-amber-500/20 px-3 py-1.5 text-[11px] font-semibold text-amber-100 hover:bg-amber-500/30 transition-colors"
+            >
+              Erneut versuchen
+            </button>
+          </div>
+        )}
+
         {/* Conversation List */}
         <ConversationList
           conversations={filteredConversations}
@@ -218,6 +233,8 @@ export default function Messages() {
           currentUser={currentUser}
           allUsers={allUsers}
           onSelect={setSelectedChatId}
+          totalCount={conversations.length}
+          filterActive={Boolean(searchQuery.trim() || filter !== 'all')}
         />
       </div>
 
@@ -239,7 +256,11 @@ export default function Messages() {
           />
         ) : (
           <div className="flex-1 flex items-center justify-center text-center p-8 bg-black">
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+            <motion.div
+              initial={reduceMotion ? false : { opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={reduceMotion ? { duration: 0 } : { duration: 0.5 }}
+            >
               <div className="relative w-24 h-24 mx-auto mb-6">
                 <div className="absolute inset-0 bg-green-500/10 rounded-3xl blur-xl" />
                 <div className="relative w-24 h-24 bg-zinc-900 rounded-3xl flex items-center justify-center border border-zinc-800">
