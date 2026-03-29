@@ -38,6 +38,7 @@ export default function Feed() {
   const [selectedPost, setSelectedPost] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [undoState, setUndoState] = useState(null);
+  const [isOnline, setIsOnline] = useState(typeof navigator === 'undefined' ? true : navigator.onLine);
   const undoTimerRef = useRef(null);
 
   const observerRef = useRef(null);
@@ -84,6 +85,19 @@ export default function Feed() {
     const interval = setInterval(() => loadPosts({ silent: true, tab: activeTab, limit: INITIAL_TAB_LIMIT }), 300000);
     return () => clearInterval(interval);
   }, [loadPosts, activeTab]);
+
+  useEffect(() => {
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
 
   // Per-tab filtering helper
   const filterPosts = useCallback((sourcePosts) => {
@@ -325,7 +339,8 @@ export default function Feed() {
                 </span>
                 <button
                   onClick={handleRefresh}
-                  className="inline-flex items-center gap-1 text-zinc-300 hover:text-white transition-colors"
+                  disabled={Boolean(tabLoading[activeTab] || tabAppending[activeTab] || !isOnline)}
+                  className="inline-flex items-center gap-1 text-zinc-300 hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <RefreshCw className="w-3 h-3" />
                   Aktualisieren
@@ -334,6 +349,11 @@ export default function Feed() {
               <div className="border-t border-white/[0.04] py-1.5 text-center text-[10px] text-zinc-500 lg:hidden">
                 Wische links/rechts, um Tabs zu wechseln
               </div>
+              {!isOnline && (
+                <div className="border-t border-white/[0.06] py-2 text-center text-[10px] lg:text-[11px] text-amber-300">
+                  Du bist offline. Es werden zwischengespeicherte Inhalte angezeigt.
+                </div>
+              )}
             </div>
           </div>
         </div>

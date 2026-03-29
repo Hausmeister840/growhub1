@@ -171,7 +171,7 @@ export default function Layout({ children, currentPageName }) {
 
   if (isLoadingAuth || isLoadingPublicSettings) {
     return (
-      <div className="min-h-[calc(var(--vh,1vh)*100)] bg-[var(--gh-bg)] flex items-center justify-center">
+      <div className="min-h-[calc(var(--vh,1vh)*100)] bg-[var(--gh-bg)] flex items-center justify-center" role="status" aria-live="polite" aria-busy="true">
         <div className="flex flex-col items-center gap-3">
           <div className="w-8 h-8 border-2 border-[var(--gh-accent)] border-t-transparent rounded-full animate-spin" />
         </div>

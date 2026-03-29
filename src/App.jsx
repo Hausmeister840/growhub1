@@ -22,7 +22,7 @@ const LayoutWrapper = ({ children, currentPageName }) => Layout ?
   : <>{children}</>;
 
 const RouteLoadingScreen = () => (
-  <div className="fixed inset-0 flex items-center justify-center bg-background text-foreground">
+  <div className="fixed inset-0 flex items-center justify-center bg-background text-foreground" role="status" aria-live="polite" aria-busy="true">
     <div className="gh-status-card">
       <div className="gh-loader-ring" />
       <p className="text-sm text-zinc-300">Seite wird geladen ...</p>
@@ -53,7 +53,7 @@ const AuthRedirectScreen = ({ navigateToLogin, loginUrl }) => {
   }, []);
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-background text-foreground">
+    <div className="fixed inset-0 flex items-center justify-center bg-background text-foreground" role="status" aria-live="polite" aria-busy="true">
       <div className="gh-status-card max-w-md px-6 text-center space-y-4">
         <div className="gh-loader-ring mx-auto" />
         <div className="space-y-2">
@@ -163,7 +163,7 @@ const AuthenticatedApp = () => {
   if (isLoadingPublicSettings || isLoadingAuth) {
     return (
       <div className="fixed inset-0 flex items-center justify-center bg-background/90">
-        <div className="gh-status-card">
+        <div className="gh-status-card" role="status" aria-live="polite" aria-busy="true">
           <div className="gh-loader-ring" />
           <p className="text-sm text-zinc-300">Verbindung wird aufgebaut ...</p>
         </div>
