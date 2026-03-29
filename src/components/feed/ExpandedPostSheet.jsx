@@ -89,9 +89,9 @@ export default function ExpandedPostSheet({ post, user, currentUser, onClose, on
       fadeFromIndex={1}
     >
       <DrawerPrimitive.Portal>
-        <DrawerPrimitive.Overlay className="fixed inset-0 z-[9998] bg-black/85 backdrop-blur-md" />
+        <DrawerPrimitive.Overlay className="fixed inset-0 z-[9998] bg-black/80 backdrop-blur-sm" />
         <DrawerPrimitive.Content
-          className={`fixed inset-x-0 bottom-0 z-[9999] flex flex-col bg-zinc-950 border-t border-zinc-800 outline-none ${isFullscreen ? 'rounded-none' : 'rounded-t-3xl'}`}
+          className={`fixed inset-x-0 bottom-0 z-[9999] flex flex-col gh-sheet outline-none ${isFullscreen ? 'rounded-none' : 'rounded-t-3xl'}`}
           style={{ maxHeight: isFullscreen ? '100vh' : '70vh' }}
         >
           {/* Drag handle */}
@@ -165,21 +165,21 @@ export default function ExpandedPostSheet({ post, user, currentUser, onClose, on
             )}
 
             {/* Actions */}
-            <div className="px-4 py-3 flex items-center justify-between border-t border-zinc-800/60">
+            <div className="px-4 py-3 flex items-center justify-between border-t border-white/10">
               <div className="flex items-center gap-2">
-                <button onClick={handleLike} className="flex items-center gap-2 px-3 py-2 rounded-xl transition-all active:scale-90">
+                <button onClick={handleLike} className="gh-pressable flex items-center gap-2 px-3 py-2 rounded-xl transition-all hover:bg-white/[0.04]">
                   <Heart className={`w-5 h-5 transition-colors ${isLiked ? 'fill-red-500 text-red-500' : 'text-zinc-400'}`} />
                   {totalReactions > 0 && <span className={`text-sm font-semibold ${isLiked ? 'text-red-400' : 'text-zinc-400'}`}>{totalReactions}</span>}
                 </button>
-                <button onClick={() => inputRef.current?.focus()} className="flex items-center gap-2 px-3 py-2 rounded-xl transition-all active:scale-90 text-zinc-400">
+                <button onClick={() => inputRef.current?.focus()} className="gh-pressable flex items-center gap-2 px-3 py-2 rounded-xl transition-all text-zinc-400 hover:bg-white/[0.04]">
                   <MessageCircle className="w-5 h-5" />
                   {comments.length > 0 && <span className="text-sm font-semibold">{comments.length}</span>}
                 </button>
-                <button onClick={handleShare} className="px-3 py-2 rounded-xl transition-all active:scale-90 text-zinc-400">
+                <button onClick={handleShare} className="gh-pressable px-3 py-2 rounded-xl transition-all text-zinc-400 hover:bg-white/[0.04]">
                   <Share2 className="w-5 h-5" />
                 </button>
               </div>
-              <button onClick={() => { if (onBookmark) onBookmark(); }} className={`p-2 rounded-xl transition-all active:scale-90 ${isBookmarked ? 'text-yellow-400' : 'text-zinc-400'}`}>
+              <button onClick={() => { if (onBookmark) onBookmark(); }} className={`gh-pressable p-2 rounded-xl transition-all hover:bg-white/[0.04] ${isBookmarked ? 'text-yellow-400' : 'text-zinc-400'}`}>
                 <Bookmark className={`w-5 h-5 ${isBookmarked ? 'fill-current' : ''}`} />
               </button>
             </div>
@@ -230,7 +230,7 @@ export default function ExpandedPostSheet({ post, user, currentUser, onClose, on
           </div>
 
           {/* Comment Input — pinned to bottom */}
-          <div className="flex-shrink-0 border-t border-zinc-800 bg-zinc-950 px-4 py-3 pb-[max(12px,env(safe-area-inset-bottom))]">
+          <div className="flex-shrink-0 border-t border-white/10 bg-black/20 px-4 py-3 pb-[max(12px,env(safe-area-inset-bottom))]">
             {currentUser ? (
               <div className="flex gap-3 items-end">
                 <div className="w-9 h-9 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center text-white font-semibold text-sm flex-shrink-0">

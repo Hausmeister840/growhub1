@@ -26,7 +26,6 @@ const PWAInstallPrompt = React.lazy(() => import("@/components/pwa/PWAInstallPro
 const UpdateNotification = React.lazy(() => import("@/components/pwa/UpdateNotification"));
 const PushNotificationManager = React.lazy(() => import("@/components/notifications/PushNotificationManager"));
 const OfflineQueue = React.lazy(() => import("@/components/offline/OfflineQueue"));
-const OfflineIndicator = React.lazy(() => import("@/components/ui/OfflineIndicator"));
 const NetworkIndicator = React.lazy(() => import("@/components/ui/NetworkIndicator"));
 
 const NO_NAV_PAGES = ['PostThread', 'MobileMigration', 'AgeGate', 'Onboarding', 'Reels', 'CreateStory', 'PlantScan', 'Login'];
@@ -144,7 +143,7 @@ export default function Layout({ children, currentPageName }) {
     return () => {
       window.removeEventListener('openCreatePost', handleOpenCreate);
     };
-  }, [user]);
+  }, [user, navigate, navigateToLogin]);
 
   useEffect(() => {
     const enableUI = () => setEnableDeferredUI(true);
@@ -250,7 +249,6 @@ export default function Layout({ children, currentPageName }) {
                   <UpdateNotification />
                   <PushNotificationManager currentUser={user} />
                   <OfflineQueue />
-                  <OfflineIndicator />
                   <NetworkIndicator />
                 </>
               ) : null}

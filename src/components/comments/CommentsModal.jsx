@@ -287,9 +287,9 @@ export default function CommentsModal({
       modal={true}
     >
       <DrawerPrimitive.Portal>
-        <DrawerPrimitive.Overlay className="fixed inset-0 z-[99998] bg-black/80" />
+        <DrawerPrimitive.Overlay className="fixed inset-0 z-[99998] bg-black/78 backdrop-blur-sm" />
         <DrawerPrimitive.Content
-          className="fixed inset-x-0 bottom-0 z-[99999] flex flex-col rounded-t-3xl bg-zinc-900 border-t border-zinc-800 outline-none"
+          className="fixed inset-x-0 bottom-0 z-[99999] flex flex-col rounded-t-3xl gh-sheet outline-none"
           style={{ height: '75vh', maxHeight: '75vh' }}
           onPointerDownOutside={(e) => e.preventDefault()}
         >
@@ -298,7 +298,7 @@ export default function CommentsModal({
             <div className="w-10 h-1.5 rounded-full bg-zinc-600" />
           </div>
 
-          <DrawerPrimitive.Title className="px-4 pb-3 pt-1 border-b border-zinc-800/60 text-base font-semibold text-white">
+          <DrawerPrimitive.Title className="px-4 pb-3 pt-1 border-b border-white/10 text-base font-semibold tracking-tight text-white">
             Kommentare{!isLoading && comments.length > 0 ? ` (${comments.length})` : ''}
           </DrawerPrimitive.Title>
           <DrawerPrimitive.Description className="sr-only">
@@ -347,7 +347,7 @@ export default function CommentsModal({
           </div>
 
           {/* Comment input pinned at bottom */}
-          <div className="p-3 border-t border-zinc-800/60 pb-[calc(0.75rem+env(safe-area-inset-bottom))]">
+          <div className="p-3 border-t border-white/10 pb-[calc(0.75rem+env(safe-area-inset-bottom))]">
             {currentUser ? (
               <CommentInput
                 user={currentUser}

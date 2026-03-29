@@ -7,6 +7,9 @@ import { formatDistanceToNow } from 'date-fns';
 import { de } from 'date-fns/locale';
 import { getDisplayName, getInitials } from '@/components/utils/terminology';
 
+const REELS_COMMENTS_CACHE_TTL_MS = 30 * 1000;
+const reelsCommentsCache = new Map();
+
 export default function ReelsCommentsModal({ isOpen, onClose, post, currentUser }) {
   const [comments, setComments] = useState([]);
   const [users, setUsers] = useState({});
@@ -15,24 +18,61 @@ export default function ReelsCommentsModal({ isOpen, onClose, post, currentUser 
   const [isSending, setIsSending] = useState(false);
   const inputRef = useRef(null);
   const listRef = useRef(null);
+  const abortRef = useRef(null);
 
   useEffect(() => {
     if (isOpen && post?.id) load();
+    return () => {
+      if (abortRef.current) abortRef.current.abort();
+    };
   }, [isOpen, post?.id]);
 
   const load = async () => {
+    if (!post?.id) return;
+
+    const cacheKey = post.id;
+    const cached = reelsCommentsCache.get(cacheKey);
+    const cacheIsFresh = cached && (Date.now() - cached.ts) < REELS_COMMENTS_CACHE_TTL_MS;
+
+    if (cacheIsFresh) {
+      setComments(cached.comments || []);
+      setUsers(cached.users || {});
+      setIsLoading(false);
+      return;
+    }
+
+    if (abortRef.current) abortRef.current.abort();
+    abortRef.current = new AbortController();
+
     setIsLoading(true);
     try {
       const data = await base44.entities.Comment.filter({ post_id: post.id }, '-created_date');
+      if (abortRef.current?.signal.aborted) return;
       setComments(data || []);
+
       const emails = [...new Set((data || []).map(c => c.author_email).filter(Boolean))];
+      let map = {};
+
       if (emails.length) {
-        const results = await Promise.all(emails.map(e => base44.entities.User.filter({ email: e }).catch(() => [])));
-        const map = {};
-        results.flat().forEach(u => { if (u?.email) map[u.email] = u; });
-        setUsers(map);
+        // Use batch user resolution to avoid N+1 network requests.
+        const resolvedUsers = await base44.functions.invoke('profile/resolveUsers', {
+          emails,
+          ids: [],
+        }).catch(() => null);
+        map = { ...(resolvedUsers?.data?.map || {}) };
       }
-    } catch { } finally { setIsLoading(false); }
+
+      setUsers(map);
+      reelsCommentsCache.set(cacheKey, {
+        comments: data || [],
+        users: map,
+        ts: Date.now()
+      });
+    } catch {
+      if (abortRef.current?.signal.aborted) return;
+    } finally {
+      if (!abortRef.current?.signal.aborted) setIsLoading(false);
+    }
   };
 
   const submit = async () => {

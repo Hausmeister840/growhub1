@@ -50,7 +50,7 @@ const AuthRedirectScreen = ({ navigateToLogin, loginUrl }) => {
     }, 1200);
 
     return () => window.clearTimeout(timer);
-  }, [navigateToLogin]);
+  }, []);
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-background text-foreground">
@@ -78,7 +78,7 @@ const AuthRedirectScreen = ({ navigateToLogin, loginUrl }) => {
             onClick={clearStoredBase44Config}
             className="inline-flex items-center justify-center rounded-md border border-border px-3 py-2 text-sm font-medium hover:bg-accent"
           >
-            Lokale Base44-Config loschen
+            Lokale Base44-Config löschen
           </button>
         </div>
         {loginUrl ? (
@@ -121,7 +121,7 @@ const BackendErrorScreen = ({ error }) => (
         <p className="text-xs font-semibold uppercase tracking-[0.2em] text-amber-400">Verbindung fehlgeschlagen</p>
         <h1 className="text-xl md:text-2xl font-semibold">Die App kann das Base44-Backend nicht erreichen</h1>
         <p className="text-zinc-300">
-          Das ist oft ein lokaler Konfigurationsrest im Browser oder eine ungultige `server_url`.
+          Das ist oft ein lokaler Konfigurationsrest im Browser oder eine ungültige `server_url`.
           Statt eines weißen Bildschirms siehst du jetzt die Ursache.
         </p>
       </div>
@@ -138,7 +138,7 @@ const BackendErrorScreen = ({ error }) => (
           onClick={clearStoredBase44Config}
           className="inline-flex items-center gap-2 rounded-md bg-amber-500 hover:bg-amber-400 px-3 py-2 text-sm font-semibold text-black"
         >
-          Gespeicherte Config loschen
+          Gespeicherte Config löschen
         </button>
         <button
           onClick={() => window.location.reload()}

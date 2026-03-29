@@ -172,10 +172,25 @@ export default function Feed() {
   // ---------- HANDLERS ----------
   const handleRefresh = useCallback(async () => {
     setSearchQuery('');
-    // Only refresh active tab for speed
-    await loadPosts({ force: true, tab: activeTab, limit: INITIAL_TAB_LIMIT });
-    toast.success('Feed aktualisiert!');
+    try {
+      // Only refresh active tab for speed
+      await loadPosts({ force: true, tab: activeTab, limit: INITIAL_TAB_LIMIT });
+      toast.success('Feed aktualisiert!');
+    } catch (error) {
+      toast.error('Aktualisierung fehlgeschlagen. Bitte versuche es erneut.');
+      console.warn('Feed refresh failed:', error);
+    }
   }, [loadPosts, activeTab]);
+
+  // When connection returns, refresh current tab once.
+  useEffect(() => {
+    const handleOnline = () => {
+      loadPosts({ tab: activeTab, force: true, limit: INITIAL_TAB_LIMIT, silent: true });
+    };
+
+    window.addEventListener('online', handleOnline);
+    return () => window.removeEventListener('online', handleOnline);
+  }, [activeTab, loadPosts]);
 
   // Listen for post created events from global CreatePost modal
   useEffect(() => {
@@ -309,7 +324,7 @@ export default function Feed() {
                   {lastUpdated[activeTab] ? `Zuletzt aktualisiert: ${formatLastUpdated(lastUpdated[activeTab])}` : 'Noch nicht aktualisiert'}
                 </span>
                 <button
-                  onClick={() => loadPosts({ tab: activeTab, force: true, limit: INITIAL_TAB_LIMIT })}
+                  onClick={handleRefresh}
                   className="inline-flex items-center gap-1 text-zinc-300 hover:text-white transition-colors"
                 >
                   <RefreshCw className="w-3 h-3" />
