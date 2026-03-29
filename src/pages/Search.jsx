@@ -302,9 +302,11 @@ export default function Search() {
                 className="divide-y divide-zinc-800/30"
               >
                 {searchResults.posts.length === 0 ? (
-                  <div className="p-12 text-center text-zinc-500">
-                    Keine Posts gefunden
-                  </div>
+                  <SearchEmptyState
+                    icon={SearchIcon}
+                    title="Keine Posts gefunden"
+                    hint="Probiere andere Suchbegriffe, Synonyme oder Hashtags — mindestens zwei Zeichen."
+                  />
                 ) : (
                   searchResults.posts.map((post) => (
                     <PostCard
@@ -332,9 +334,11 @@ export default function Search() {
                 className="p-4 space-y-2"
               >
                 {searchResults.users.length === 0 ? (
-                  <div className="p-12 text-center text-zinc-500">
-                    Keine Nutzer gefunden
-                  </div>
+                  <SearchEmptyState
+                    icon={Users}
+                    title="Keine Nutzer gefunden"
+                    hint="Nutze einen anderen Namen oder @-Handle — oder durchstöbere die Vorschläge auf der Startseite der Suche."
+                  />
                 ) : (
                   searchResults.users.map((user, idx) => (
                     <UserCard key={user.id} user={user} currentUser={currentUser} index={idx} />
@@ -352,9 +356,11 @@ export default function Search() {
                 className="p-4 space-y-2"
               >
                 {searchResults.tags.length === 0 ? (
-                  <div className="p-12 text-center text-zinc-500">
-                    Keine Tags gefunden
-                  </div>
+                  <SearchEmptyState
+                    icon={Hash}
+                    title="Keine Tags gefunden"
+                    hint="Es gibt noch keine passenden Hashtags zu deiner Suche. Probiere ein kürzeres Stichwort."
+                  />
                 ) : (
                   searchResults.tags.map((tag) => (
                     <motion.button
