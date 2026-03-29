@@ -3,7 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
 import { 
   Plus, TrendingUp, MapPin, Users, Sparkles,
-  Search, Flame, Zap
+  Search, Flame, Zap, AlertTriangle
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
@@ -29,6 +29,7 @@ export default function Community() {
   const [trendingSpaces, setTrendingSpaces] = useState([]);
   const [nearbySpaces, setNearbySpaces] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(null);
   const [activeCategory, setActiveCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [showCreateModal, setShowCreateModal] = useState(false);

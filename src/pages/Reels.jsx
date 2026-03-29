@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { base44 } from '@/api/base44Client';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ArrowLeft, Loader2, Image as ImageIcon, Heart } from 'lucide-react';
+import { ArrowLeft, Loader2, Image as ImageIcon, Heart, AlertTriangle, RefreshCw } from 'lucide-react';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
 import ReelItem from '../components/reels/ReelItem';
@@ -23,6 +23,7 @@ export default function Reels() {
   const [currentUser, setCurrentUser] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState(null);
   const [isMuted, setIsMuted] = useState(false);
   const [activeTab, setActiveTab] = useState('foryou');
   const [showComments, setShowComments] = useState(false);
@@ -34,10 +35,9 @@ export default function Reels() {
   const lastTapRef = useRef(0);
   const navigate = useNavigate();
 
-  useEffect(() => { loadData(); }, []);
-
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     setIsLoading(true);
+    setLoadError(null);
     try {
       const response = await base44.functions.invoke('feed/getReelsFeed', {});
       const { posts: mediaPosts, users: userMap, currentUser: cu } = response.data || {};
@@ -46,8 +46,13 @@ export default function Reels() {
       setUsers(userMap || {});
     } catch (err) {
       console.error('Reels load:', err);
-    } finally { setIsLoading(false); }
-  };
+      setLoadError('Reels konnten nicht geladen werden. Bitte Verbindung prüfen und erneut versuchen.');
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  useEffect(() => { loadData(); }, [loadData]);
 
   const reels = useMemo(() => {
     let items = [];
@@ -164,24 +169,57 @@ export default function Reels() {
 
   if (isLoading) {
     return (
-      <div className="fixed inset-0 bg-black flex items-center justify-center z-50">
-        <Loader2 className="w-8 h-8 text-green-500 animate-spin" />
+      <div className="fixed inset-0 bg-black flex items-center justify-center z-50" role="status" aria-live="polite" aria-busy="true">
+        <Loader2 className="w-8 h-8 text-green-500 animate-spin" aria-hidden />
+      </div>
+    );
+  }
+
+  if (loadError) {
+    return (
+      <div className="fixed inset-0 bg-black flex flex-col items-center justify-center z-50 p-6">
+        <button type="button" onClick={() => navigate(-1)} className="absolute top-5 left-4 w-10 h-10 rounded-full bg-white/10 flex items-center justify-center" aria-label="Zurück">
+          <ArrowLeft className="w-5 h-5 text-white" />
+        </button>
+        <div className="gh-content-section max-w-md w-full p-8 text-center space-y-4">
+          <div className="w-16 h-16 mx-auto rounded-2xl bg-amber-500/10 border border-amber-500/25 flex items-center justify-center">
+            <AlertTriangle className="w-8 h-8 text-amber-400" />
+          </div>
+          <h2 className="text-lg font-bold text-white">Laden fehlgeschlagen</h2>
+          <p className="text-sm text-zinc-400 leading-relaxed">{loadError}</p>
+          <div className="flex flex-col sm:flex-row gap-2 justify-center pt-2">
+            <button type="button" onClick={() => loadData()} className="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-green-500 text-black rounded-full font-bold text-sm">
+              <RefreshCw className="w-4 h-4" />
+              Erneut versuchen
+            </button>
+            <button type="button" onClick={() => navigate('/Feed')} className="px-6 py-2.5 rounded-full border border-white/15 text-white text-sm font-medium hover:bg-white/5">
+              Zum Feed
+            </button>
+          </div>
+        </div>
       </div>
     );
   }
 
   if (!reels.length) {
+    const tabHasNoMedia = posts.length > 0;
     return (
       <div className="fixed inset-0 bg-black flex flex-col items-center justify-center z-50 p-6">
-        <button onClick={() => navigate(-1)} className="absolute top-5 left-4 w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">
+        <button type="button" onClick={() => navigate(-1)} className="absolute top-5 left-4 w-10 h-10 rounded-full bg-white/10 flex items-center justify-center" aria-label="Zurück">
           <ArrowLeft className="w-5 h-5 text-white" />
         </button>
         <div className="w-20 h-20 bg-zinc-900 rounded-full flex items-center justify-center mb-5">
           <ImageIcon className="w-9 h-9 text-zinc-700" />
         </div>
-        <h2 className="text-lg font-bold text-white mb-1">Noch keine Reels</h2>
-        <p className="text-zinc-500 text-sm text-center mb-6">Teile Bilder oder Videos!</p>
-        <button onClick={() => navigate('/Feed')} className="px-6 py-2.5 bg-green-500 text-black rounded-full font-bold text-sm">
+        <h2 className="text-lg font-bold text-white mb-1">
+          {tabHasNoMedia ? 'Keine Reels in diesem Tab' : 'Noch keine Reels'}
+        </h2>
+        <p className="text-zinc-500 text-sm text-center mb-6 max-w-xs">
+          {tabHasNoMedia
+            ? 'Wechsle den Tab oder schau später wieder vorbei.'
+            : 'Teile Bilder oder Videos im Feed!'}
+        </p>
+        <button type="button" onClick={() => navigate('/Feed')} className="px-6 py-2.5 bg-green-500 text-black rounded-full font-bold text-sm">
           Zum Feed
         </button>
       </div>
