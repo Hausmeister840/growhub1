@@ -23,7 +23,10 @@ const LayoutWrapper = ({ children, currentPageName }) => Layout ?
 
 const RouteLoadingScreen = () => (
   <div className="fixed inset-0 flex items-center justify-center bg-background text-foreground">
-    <div className="w-8 h-8 border-4 border-border border-t-primary rounded-full animate-spin"></div>
+    <div className="gh-status-card">
+      <div className="gh-loader-ring" />
+      <p className="text-sm text-zinc-300">Seite wird geladen ...</p>
+    </div>
   </div>
 );
 
@@ -51,11 +54,11 @@ const AuthRedirectScreen = ({ navigateToLogin, loginUrl }) => {
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-background text-foreground">
-      <div className="max-w-md px-6 text-center space-y-4">
-        <div className="w-10 h-10 mx-auto border-4 border-zinc-800 border-t-green-500 rounded-full animate-spin"></div>
+      <div className="gh-status-card max-w-md px-6 text-center space-y-4">
+        <div className="gh-loader-ring mx-auto" />
         <div className="space-y-2">
-          <h1 className="text-xl font-semibold">Anmelden oder Konto erstellen</h1>
-          <p className="text-sm text-zinc-400">
+          <h1 className="text-xl font-semibold tracking-tight">Anmelden oder Konto erstellen</h1>
+          <p className="text-sm text-zinc-300">
             Gleicher Flow wie Social Apps: Ein Klick und du landest im sicheren Online-Login.
           </p>
         </div>
@@ -113,7 +116,7 @@ const clearStoredBase44Config = () => {
 
 const BackendErrorScreen = ({ error }) => (
   <div className="min-h-screen bg-background text-foreground flex items-center justify-center px-4">
-    <div className="w-full max-w-2xl rounded-2xl border border-border bg-card p-6 md:p-8 shadow-2xl space-y-5">
+    <div className="w-full max-w-2xl gh-content-section p-6 md:p-8 space-y-5">
       <div className="space-y-2">
         <p className="text-xs font-semibold uppercase tracking-[0.2em] text-amber-400">Verbindung fehlgeschlagen</p>
         <h1 className="text-xl md:text-2xl font-semibold">Die App kann das Base44-Backend nicht erreichen</h1>
@@ -133,7 +136,7 @@ const BackendErrorScreen = ({ error }) => (
       <div className="flex flex-wrap gap-2">
         <button
           onClick={clearStoredBase44Config}
-          className="inline-flex items-center gap-2 rounded-md bg-amber-500 hover:bg-amber-400 px-3 py-2 text-sm font-medium text-black"
+          className="inline-flex items-center gap-2 rounded-md bg-amber-500 hover:bg-amber-400 px-3 py-2 text-sm font-semibold text-black"
         >
           Gespeicherte Config loschen
         </button>
@@ -160,7 +163,10 @@ const AuthenticatedApp = () => {
   if (isLoadingPublicSettings || isLoadingAuth) {
     return (
       <div className="fixed inset-0 flex items-center justify-center bg-background/90">
-        <div className="w-8 h-8 border-4 border-border border-t-primary rounded-full animate-spin"></div>
+        <div className="gh-status-card">
+          <div className="gh-loader-ring" />
+          <p className="text-sm text-zinc-300">Verbindung wird aufgebaut ...</p>
+        </div>
       </div>
     );
   }
