@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { base44 } from '@/api/base44Client';
-import { Bookmark, Loader2, Sparkles } from "lucide-react";
+import { Bookmark, Loader2, Sparkles, AlertTriangle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { Button } from "@/components/ui/button";
@@ -12,6 +12,7 @@ export default function Saved() {
   const [savedPosts, setSavedPosts] = useState([]);
   const [users, setUsers] = useState({});
   const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState(null);
   const navigate = useNavigate();
 
   const { handleReaction, handleBookmark, handleDelete } = usePost();
@@ -22,6 +23,7 @@ export default function Saved() {
 
   const loadData = async () => {
     setIsLoading(true);
+    setLoadError(null);
     try {
       const user = await base44.auth.me();
       setCurrentUser(user);
@@ -59,6 +61,7 @@ export default function Saved() {
 
     } catch (error) {
       console.error('Load error:', error);
+      setLoadError('Gespeicherte Beiträge konnten nicht geladen werden. Bitte prüfe deine Verbindung und versuche es erneut.');
     } finally {
       setIsLoading(false);
     }
@@ -66,10 +69,30 @@ export default function Saved() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
+      <div className="min-h-screen bg-black flex items-center justify-center" role="status" aria-live="polite" aria-busy="true">
         <div className="flex flex-col items-center gap-3">
           <Loader2 className="w-10 h-10 text-green-500 animate-spin" />
           <p className="text-zinc-500 text-sm">Lade gespeicherte Beiträge...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (loadError) {
+    return (
+      <div className="min-h-screen bg-black flex items-center justify-center p-6">
+        <div className="gh-content-section max-w-md w-full p-8 text-center space-y-4">
+          <div className="w-16 h-16 mx-auto rounded-2xl bg-amber-500/10 border border-amber-500/25 flex items-center justify-center">
+            <AlertTriangle className="w-8 h-8 text-amber-400" />
+          </div>
+          <h2 className="text-xl font-bold text-white">Laden fehlgeschlagen</h2>
+          <p className="text-sm text-zinc-400">{loadError}</p>
+          <Button
+            onClick={() => loadData()}
+            className="bg-green-600 hover:bg-green-700 w-full sm:w-auto"
+          >
+            Erneut versuchen
+          </Button>
         </div>
       </div>
     );

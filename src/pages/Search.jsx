@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search as SearchIcon, ArrowLeft, Loader2, TrendingUp, Hash, X, Sparkles } from "lucide-react";
+import { Search as SearchIcon, ArrowLeft, Loader2, TrendingUp, Hash, X, Sparkles, Users } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate, useLocation } from "react-router-dom";
 import PostCard from "../components/feed/PostCard";
@@ -17,6 +17,18 @@ const sanitizeSearchQuery = (query) => {
     .replace(/\s+/g, ' ')     // Mehrfache Leerzeichen normalisieren
     .trim();
 };
+
+function SearchEmptyState({ icon: Icon, title, hint }) {
+  return (
+    <div className="mx-4 my-8 gh-content-section p-8 text-center space-y-3">
+      <div className="w-16 h-16 mx-auto rounded-2xl bg-white/[0.04] border border-white/[0.08] flex items-center justify-center">
+        <Icon className="w-8 h-8 text-zinc-500" />
+      </div>
+      <h3 className="text-lg font-semibold text-white">{title}</h3>
+      <p className="text-sm text-zinc-500 max-w-xs mx-auto leading-relaxed">{hint}</p>
+    </div>
+  );
+}
 
 export default function Search() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -217,8 +229,8 @@ export default function Search() {
       {/* Content */}
       <div className="max-w-2xl mx-auto">
         {isSearching ? (
-          <div className="flex items-center justify-center p-12">
-            <Loader2 className="w-8 h-8 text-green-500 animate-spin" />
+          <div className="flex items-center justify-center p-12" role="status" aria-live="polite" aria-busy="true">
+            <Loader2 className="w-8 h-8 text-green-500 animate-spin" aria-hidden />
           </div>
         ) : searchQuery.trim().length === 0 ? (
           /* Trending & Suggestions */

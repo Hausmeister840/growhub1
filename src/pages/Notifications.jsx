@@ -270,11 +270,41 @@ export default function Notifications() {
 
       {/* Content */}
       <div className="max-w-xl mx-auto px-4 py-4">
+        {loadError && items.length > 0 && (
+          <div className="mb-4 rounded-2xl border border-amber-500/25 bg-amber-500/10 px-4 py-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+            <p className="text-sm text-amber-100">{loadError}</p>
+            <button
+              type="button"
+              onClick={() => load(false)}
+              className="shrink-0 rounded-lg bg-amber-500/20 px-3 py-1.5 text-xs font-semibold text-amber-100 hover:bg-amber-500/30 transition-colors"
+            >
+              Erneut versuchen
+            </button>
+          </div>
+        )}
         {isLoading ? (
-          <div className="flex items-center justify-center py-20">
+          <div className="flex items-center justify-center py-20" role="status" aria-live="polite" aria-busy="true">
             <div className="w-7 h-7 border-2 border-[var(--gh-accent)] border-t-transparent rounded-full animate-spin" />
           </div>
         ) : filteredItems.length === 0 ? (
+          loadError && items.length === 0 ? (
+            <div className="text-center py-24 px-6 gh-content-section">
+              <div className="w-20 h-20 mx-auto mb-5 bg-[var(--gh-surface)] rounded-3xl flex items-center justify-center border border-amber-500/20">
+                <AlertTriangle className="w-9 h-9 text-amber-400/80" />
+              </div>
+              <h3 className="text-lg font-semibold text-white mb-2">Laden fehlgeschlagen</h3>
+              <p className="text-sm text-[var(--gh-text-muted)] max-w-[280px] mx-auto mb-6">
+                {loadError}
+              </p>
+              <button
+                type="button"
+                onClick={() => load(false)}
+                className="gh-btn-primary px-6 py-2.5 text-sm"
+              >
+                Erneut versuchen
+              </button>
+            </div>
+          ) : (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -293,6 +323,7 @@ export default function Notifications() {
               {tab === "unread" ? "Du bist auf dem neuesten Stand!" : "Interagiere mit anderen, um Benachrichtigungen zu erhalten"}
             </p>
           </motion.div>
+          )
         ) : (
           <div className="space-y-5">
             {groupByDay(filteredItems).map(([day, list]) => (
