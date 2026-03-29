@@ -42,6 +42,7 @@ export default function Notifications() {
   const [tab, setTab] = useState("unread");
   const [typeFilter, setTypeFilter] = useState("all");
   const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState(null);
   const [senderProfiles, setSenderProfiles] = useState({});
   const navigate = useNavigate();
 
@@ -60,6 +61,7 @@ export default function Notifications() {
   const load = useCallback(async (silent = false) => {
     if (!currentUser) return;
     if (!silent) setIsLoading(true);
+    setLoadError(null);
     try {
       const query = tab === "unread"
         ? { recipient_email: currentUser.email, read: false }
@@ -78,6 +80,7 @@ export default function Notifications() {
       }
     } catch (error) {
       console.error('Load notifications error:', error);
+      setLoadError('Benachrichtigungen konnten nicht geladen werden. Bitte prüfe deine Verbindung und versuche es erneut.');
     } finally {
       setIsLoading(false);
     }
@@ -206,7 +209,7 @@ export default function Notifications() {
 
   if (!currentUser) {
     return (
-      <div className="min-h-screen bg-[var(--gh-bg)] flex items-center justify-center">
+      <div className="min-h-screen bg-[var(--gh-bg)] flex items-center justify-center" role="status" aria-live="polite" aria-busy="true">
         <div className="w-7 h-7 border-2 border-[var(--gh-accent)] border-t-transparent rounded-full animate-spin" />
       </div>
     );

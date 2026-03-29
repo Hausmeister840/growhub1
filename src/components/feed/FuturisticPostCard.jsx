@@ -1,9 +1,9 @@
-import { useState, useCallback, useRef, useEffect, lazy, Suspense } from 'react';
+import { useState, useCallback, useRef, useEffect, lazy, Suspense, memo } from 'react';
 import { Heart, MessageCircle, Share2, Bookmark, MoreHorizontal, Sprout, ChevronRight } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { de } from 'date-fns/locale';
 import { toast } from 'sonner';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { isVideoUrl } from '@/components/utils/media';
 import { useContextMenu } from '@/components/contextMenu/ContextMenuProvider';
@@ -27,7 +27,7 @@ const REACTIONS = [
   { type: 'celebrate', emoji: '🎉', label: 'Feiern' },
 ];
 
-export default function FuturisticPostCard({ 
+function FuturisticPostCard({ 
   post, 
   user, 
   currentUser, 
@@ -38,6 +38,7 @@ export default function FuturisticPostCard({
   onCommentAdded,
   index = 0,
 }) {
+  const reduceMotion = useReducedMotion();
   const isLiked = post.reactions?.like?.users?.includes(currentUser?.email) || false;
   const isBookmarked = post.bookmarked_by_users?.includes(currentUser?.email) || false;
   // Sum all reaction types for total display
@@ -327,8 +328,8 @@ export default function FuturisticPostCard({
               className="flex items-center gap-1.5 px-2.5 py-2 rounded-xl transition-all active:scale-90 hover:bg-white/[0.04]"
             >
               <motion.div
-                animate={likeAnim ? { scale: [1, 1.4, 1] } : { scale: 1 }}
-                transition={{ duration: 0.3 }}
+                animate={reduceMotion || !likeAnim ? { scale: 1 } : { scale: [1, 1.4, 1] }}
+                transition={{ duration: reduceMotion ? 0 : 0.3 }}
               >
                 <Heart className={`w-5 h-5 transition-colors ${isLiked ? 'fill-red-500 text-red-500' : 'text-zinc-400'}`} />
               </motion.div>
@@ -342,10 +343,10 @@ export default function FuturisticPostCard({
               {showReactionPicker && (
                 <motion.div
                   ref={reactionPickerRef}
-                  initial={{ opacity: 0, y: 8, scale: 0.85 }}
+                  initial={reduceMotion ? false : { opacity: 0, y: 8, scale: 0.85 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: 8, scale: 0.85 }}
-                  transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+                  exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 8, scale: 0.85 }}
+                  transition={reduceMotion ? { duration: 0 } : { type: 'spring', stiffness: 400, damping: 25 }}
                   className="absolute bottom-full left-0 mb-2 bg-zinc-800 border border-zinc-700 rounded-2xl px-3 py-2.5 flex gap-2 z-50 shadow-2xl"
                 >
                   {REACTIONS.map((r) => (
@@ -389,8 +390,8 @@ export default function FuturisticPostCard({
         </div>
 
         <motion.button
-          animate={bookmarkAnim ? { scale: [1, 1.25, 1] } : { scale: 1 }}
-          transition={{ duration: 0.25 }}
+          animate={reduceMotion || !bookmarkAnim ? { scale: 1 } : { scale: [1, 1.25, 1] }}
+          transition={{ duration: reduceMotion ? 0 : 0.25 }}
           onClick={handleBookmark}
           className={`p-2 rounded-xl transition-all active:scale-90 hover:bg-white/[0.04] ${isBookmarked ? 'text-yellow-400' : 'text-zinc-400'}`}
         >
@@ -401,3 +402,5 @@ export default function FuturisticPostCard({
     </>
   );
 }
+
+export default memo(FuturisticPostCard);
