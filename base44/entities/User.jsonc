@@ -1,0 +1,346 @@
+{
+  "name": "User",
+  "type": "object",
+  "properties": {
+    "username": {
+      "type": "string",
+      "description": "Unique username"
+    },
+    "bio": {
+      "type": "string"
+    },
+    "avatar_url": {
+      "type": "string"
+    },
+    "banner_url": {
+      "type": "string"
+    },
+    "location": {
+      "type": "string"
+    },
+    "website": {
+      "type": "string"
+    },
+    "social_links": {
+      "type": "object",
+      "properties": {
+        "instagram": {
+          "type": "string"
+        },
+        "twitter": {
+          "type": "string"
+        },
+        "youtube": {
+          "type": "string"
+        }
+      }
+    },
+    "grow_level": {
+      "type": "string",
+      "enum": [
+        "beginner",
+        "intermediate",
+        "advanced",
+        "expert"
+      ],
+      "default": "beginner"
+    },
+    "grow_type": {
+      "type": "string",
+      "enum": [
+        "indoor",
+        "outdoor",
+        "both"
+      ],
+      "default": "indoor"
+    },
+    "interests": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "privacy_mode": {
+      "type": "string",
+      "enum": [
+        "public",
+        "followers",
+        "private"
+      ],
+      "default": "public",
+      "description": "Wer kann mein Profil sehen"
+    },
+    "show_activity_status": {
+      "type": "boolean",
+      "default": true,
+      "description": "Online-Status anzeigen"
+    },
+    "show_grow_diaries": {
+      "type": "string",
+      "enum": [
+        "public",
+        "followers",
+        "private"
+      ],
+      "default": "public",
+      "description": "Wer kann meine Grow-Tageb\u00fccher sehen"
+    },
+    "show_plant_scans": {
+      "type": "string",
+      "enum": [
+        "public",
+        "followers",
+        "private"
+      ],
+      "default": "private",
+      "description": "Wer kann meine Pflanzen-Scans sehen"
+    },
+    "show_posts": {
+      "type": "string",
+      "enum": [
+        "public",
+        "followers",
+        "private"
+      ],
+      "default": "public",
+      "description": "Wer kann meine Posts sehen"
+    },
+    "show_achievements": {
+      "type": "string",
+      "enum": [
+        "public",
+        "followers",
+        "private"
+      ],
+      "default": "public",
+      "description": "Wer kann meine Erfolge sehen"
+    },
+    "allow_messages_from": {
+      "type": "string",
+      "enum": [
+        "everyone",
+        "followers",
+        "nobody"
+      ],
+      "default": "everyone",
+      "description": "Wer kann mir Nachrichten schicken"
+    },
+    "show_followers_list": {
+      "type": "boolean",
+      "default": true,
+      "description": "Follower-Liste \u00f6ffentlich anzeigen"
+    },
+    "allow_mentions": {
+      "type": "boolean",
+      "default": true,
+      "description": "Erlaubt anderen mich zu erw\u00e4hnen"
+    },
+    "followers": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "following": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "blocked_users": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "muted_users": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "followers_count": {
+      "type": "number",
+      "default": 0
+    },
+    "following_count": {
+      "type": "number",
+      "default": 0
+    },
+    "posts_count": {
+      "type": "number",
+      "default": 0
+    },
+    "xp": {
+      "type": "number",
+      "default": 0
+    },
+    "reputation_score": {
+      "type": "number",
+      "default": 0
+    },
+    "badges": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "verified": {
+      "type": "boolean",
+      "default": false
+    },
+    "last_active": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "streak": {
+      "type": "number",
+      "default": 0
+    },
+    "projects": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "technologies": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "link": {
+            "type": "string"
+          },
+          "image_url": {
+            "type": "string"
+          },
+          "created_date": {
+            "type": "string",
+            "format": "date"
+          }
+        }
+      },
+      "default": []
+    },
+    "portfolio": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "image",
+              "video",
+              "link"
+            ]
+          },
+          "url": {
+            "type": "string"
+          },
+          "thumbnail_url": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "created_date": {
+            "type": "string",
+            "format": "date"
+          }
+        }
+      },
+      "default": []
+    },
+    "notification_settings": {
+      "type": "object",
+      "properties": {
+        "push_enabled": {
+          "type": "boolean",
+          "default": true
+        },
+        "likes": {
+          "type": "boolean",
+          "default": true
+        },
+        "comments": {
+          "type": "boolean",
+          "default": true
+        },
+        "mentions": {
+          "type": "boolean",
+          "default": true
+        },
+        "new_followers": {
+          "type": "boolean",
+          "default": true
+        },
+        "followed_user_posts": {
+          "type": "boolean",
+          "default": true
+        },
+        "messages": {
+          "type": "boolean",
+          "default": true
+        },
+        "grow_updates": {
+          "type": "boolean",
+          "default": true
+        },
+        "sound": {
+          "type": "boolean",
+          "default": true
+        }
+      },
+      "default": {
+        "push_enabled": true,
+        "likes": true,
+        "comments": true,
+        "mentions": true,
+        "new_followers": true,
+        "followed_user_posts": true,
+        "messages": true,
+        "grow_updates": true,
+        "sound": true
+      }
+    },
+    "push_subscription": {
+      "type": "object",
+      "description": "Web Push subscription data"
+    },
+    "settings": {
+      "type": "object"
+    }
+  },
+  "required": [],
+  "rls": {
+    "read": {},
+    "update": {
+      "email": "{{user.email}}"
+    },
+    "delete": {
+      "_no_access": true
+    }
+  }
+}

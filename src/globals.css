@@ -1,0 +1,301 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
+
+/* ========== GrowHub Design System ========== */
+
+/* ── Global Reset & Mobile UX ── */
+html, body {
+  overscroll-behavior: none;
+  -webkit-overflow-scrolling: touch;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Selection behavior */
+button, a, nav, label,
+[role="button"], [role="navigation"], [role="tab"], [role="tablist"], [role="menuitem"],
+.no-select {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+p, span, h1, h2, h3, h4, h5, h6, article, .selectable,
+textarea, input, .post-content, .message-content {
+  -webkit-user-select: text;
+  user-select: text;
+}
+button svg, a svg, nav svg { pointer-events: none; }
+
+/* ── Design Tokens ── */
+:root {
+  /* Background */
+  --gh-bg: #000000;
+  --gh-bg-elevated: #0a0a0a;
+  --gh-surface: #111113;
+  --gh-surface-2: #18181b;
+  --gh-surface-3: #1c1c1f;
+  --gh-surface-hover: #222225;
+
+  /* Borders */
+  --gh-border: rgba(255,255,255,0.06);
+  --gh-border-strong: rgba(255,255,255,0.10);
+  --gh-border-subtle: rgba(255,255,255,0.04);
+
+  /* Text */
+  --gh-text: #fafafa;
+  --gh-text-secondary: #a1a1aa;
+  --gh-text-muted: #63636e;
+  --gh-text-subtle: #3f3f46;
+
+  /* Brand / Accent */
+  --gh-accent: #22c55e;
+  --gh-accent-hover: #16a34a;
+  --gh-accent-muted: rgba(34,197,94,0.12);
+  --gh-accent-subtle: rgba(34,197,94,0.06);
+
+  /* Status */
+  --gh-success: #22c55e;
+  --gh-warning: #f59e0b;
+  --gh-error: #ef4444;
+  --gh-info: #3b82f6;
+
+  /* Spacing scale */
+  --gh-space-xs: 4px;
+  --gh-space-sm: 8px;
+  --gh-space-md: 12px;
+  --gh-space-lg: 16px;
+  --gh-space-xl: 24px;
+  --gh-space-2xl: 32px;
+  --gh-space-3xl: 48px;
+
+  /* Radius */
+  --gh-radius-sm: 8px;
+  --gh-radius-md: 12px;
+  --gh-radius-lg: 16px;
+  --gh-radius-xl: 20px;
+  --gh-radius-2xl: 24px;
+  --gh-radius-full: 9999px;
+
+  /* Shadows */
+  --gh-shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+  --gh-shadow-md: 0 4px 12px rgba(0,0,0,0.4);
+  --gh-shadow-lg: 0 8px 24px rgba(0,0,0,0.5);
+  --gh-shadow-glow: 0 0 20px rgba(34,197,94,0.15);
+
+  /* Typography */
+  --gh-font: 'Manrope', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', system-ui, sans-serif;
+  --gh-font-mono: 'SF Mono', 'Fira Code', monospace;
+
+  /* Motion */
+  --gh-ease-standard: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --gh-ease-emphasis: cubic-bezier(0.16, 1, 0.3, 1);
+  --gh-duration-fast: 140ms;
+  --gh-duration-medium: 220ms;
+  --gh-duration-slow: 340ms;
+}
+
+body {
+  font-family: var(--gh-font);
+  background: var(--gh-bg);
+  color: var(--gh-text);
+  letter-spacing: -0.01em;
+  background-image:
+    radial-gradient(circle at 15% -10%, rgba(34, 197, 94, 0.12), transparent 32%),
+    radial-gradient(circle at 110% 45%, rgba(16, 185, 129, 0.08), transparent 30%);
+}
+
+#root {
+  min-height: 100vh;
+}
+
+h1, h2, h3, h4 {
+  letter-spacing: -0.02em;
+}
+
+:where(button, a, input, textarea, select, [role="button"], [tabindex]):focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(12, 12, 14, 1), 0 0 0 4px rgba(34, 197, 94, 0.5);
+  border-radius: 10px;
+}
+
+a, button {
+  transition:
+    color var(--gh-duration-fast) var(--gh-ease-standard),
+    background-color var(--gh-duration-fast) var(--gh-ease-standard),
+    border-color var(--gh-duration-fast) var(--gh-ease-standard),
+    transform var(--gh-duration-fast) var(--gh-ease-emphasis),
+    box-shadow var(--gh-duration-medium) var(--gh-ease-standard);
+}
+
+/* ── Scrollbar hiding ── */
+.hide-scrollbar::-webkit-scrollbar { display: none; }
+.hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ── Card System ── */
+.gh-card {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0)),
+    var(--gh-surface);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: var(--gh-radius-xl);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.28);
+  transition: border-color var(--gh-duration-fast) var(--gh-ease-standard), box-shadow var(--gh-duration-medium) var(--gh-ease-standard);
+}
+.gh-card:hover {
+  border-color: rgba(255,255,255,0.14);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.36);
+}
+.gh-card-elevated {
+  background: var(--gh-surface-2);
+  border: 1px solid var(--gh-border-strong);
+  border-radius: var(--gh-radius-xl);
+  box-shadow: var(--gh-shadow-sm);
+}
+
+/* ── Button styles ── */
+.gh-btn-primary {
+  background: linear-gradient(180deg, #34d57b 0%, var(--gh-accent) 100%);
+  color: #000;
+  font-weight: 700;
+  border-radius: var(--gh-radius-lg);
+  padding: 10px 20px;
+  font-size: 14px;
+  box-shadow: 0 8px 26px rgba(34, 197, 94, 0.24), inset 0 1px 0 rgba(255,255,255,0.25);
+  transition: all var(--gh-duration-fast) var(--gh-ease-emphasis);
+  border: none;
+  cursor: pointer;
+}
+.gh-btn-primary:hover {
+  background: linear-gradient(180deg, #3de188 0%, var(--gh-accent-hover) 100%);
+  transform: translateY(-1px);
+}
+.gh-btn-primary:active { transform: scale(0.97); }
+
+.gh-btn-ghost {
+  background: transparent;
+  color: var(--gh-text-secondary);
+  border-radius: var(--gh-radius-md);
+  padding: 8px 12px;
+  font-size: 14px;
+  transition: all 0.15s ease;
+  border: none;
+  cursor: pointer;
+}
+.gh-btn-ghost:hover { background: rgba(255,255,255,0.06); color: var(--gh-text); }
+
+/* ── Chip / Tag styles ── */
+.gh-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 14px;
+  border-radius: var(--gh-radius-full);
+  font-size: 13px;
+  font-weight: 500;
+  background: var(--gh-surface-2);
+  color: var(--gh-text-secondary);
+  border: 1px solid var(--gh-border);
+  transition: all 0.15s ease;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.gh-chip:hover { background: var(--gh-surface-hover); color: var(--gh-text); }
+.gh-chip-active {
+  background: var(--gh-accent);
+  color: #000;
+  border-color: var(--gh-accent);
+  font-weight: 600;
+}
+
+/* ── Input styles ── */
+.gh-input {
+  background: var(--gh-surface);
+  border: 1px solid var(--gh-border);
+  border-radius: var(--gh-radius-lg);
+  padding: 10px 14px;
+  font-size: 14px;
+  color: var(--gh-text);
+  transition: border-color 0.2s ease;
+  width: 100%;
+}
+.gh-input::placeholder { color: var(--gh-text-muted); }
+.gh-input:focus { outline: none; border-color: var(--gh-accent); }
+
+/* ── Dividers ── */
+.gh-divider {
+  height: 1px;
+  background: var(--gh-border);
+  border: none;
+}
+
+/* ── Safe area ── */
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* ── Backdrop blur helper ── */
+.gh-glass {
+  background: linear-gradient(180deg, rgba(16,16,18,0.82), rgba(8,8,10,0.82));
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+/* ── Animation helpers ── */
+@keyframes gh-fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.gh-animate-in {
+  animation: gh-fade-in 0.3s ease forwards;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+.animate-shimmer {
+  animation: shimmer 2s infinite;
+}
+
+/* ── Scroll utilities (used by Feed, chat, Knowledge) ── */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(24, 24, 27, 0.5);
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(34, 197, 94, 0.3);
+  border-radius: 3px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(34, 197, 94, 0.5);
+}
+
+::selection {
+  background: rgba(34, 197, 94, 0.3);
+  color: #fff;
+}
+
+/* ── App shell helpers ── */
+.gh-page-shell {
+  width: 100%;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding-left: clamp(14px, 2.2vw, 28px);
+  padding-right: clamp(14px, 2.2vw, 28px);
+}
+
+.gh-content-section {
+  border: 1px solid rgba(255,255,255,0.08);
+  background: linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0)), var(--gh-surface);
+  border-radius: 18px;
+  box-shadow: 0 12px 34px rgba(0,0,0,0.24);
+}
