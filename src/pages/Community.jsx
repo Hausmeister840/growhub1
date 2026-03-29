@@ -35,6 +35,36 @@ export default function Community() {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showGlassMenu, setShowGlassMenu] = useState(false);
 
+  const loadSpaces = useCallback(async () => {
+    setLoading(true);
+    setLoadError(null);
+    try {
+      const [aRes, tRes] = await Promise.allSettled([
+        base44.entities.CommunitySpace.list('-last_activity', 50),
+        base44.entities.CommunitySpace.filter({ is_trending: true }, '-member_count', 10),
+      ]);
+
+      const allSpaces = aRes.status === 'fulfilled' ? (aRes.value || []) : [];
+      const trending = tRes.status === 'fulfilled' ? (tRes.value || []) : [];
+
+      setSpaces(allSpaces);
+      setTrendingSpaces(trending);
+      setNearbySpaces([]);
+
+      const allFailed = aRes.status === 'rejected' && tRes.status === 'rejected';
+      if (allFailed) {
+        setLoadError('Community-Spaces konnten nicht geladen werden. Bitte Verbindung prüfen und erneut versuchen.');
+      } else if (aRes.status === 'rejected' || tRes.status === 'rejected') {
+        toast.warning('Einige Community-Daten konnten nicht geladen werden.');
+      }
+    } catch (err) {
+      console.error('Load spaces error:', err);
+      setLoadError('Community-Spaces konnten nicht geladen werden.');
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
   useEffect(() => {
     const init = async () => {
       try {
@@ -46,27 +76,7 @@ export default function Community() {
     };
     init();
     loadSpaces();
-  }, []);
-
-  const loadSpaces = async () => {
-    setLoading(true);
-    try {
-      const [allSpaces, trending] = await Promise.all([
-        base44.entities.CommunitySpace.list('-last_activity', 50),
-        base44.entities.CommunitySpace.filter({ is_trending: true }, '-member_count', 10)
-      ]);
-      
-      setSpaces(allSpaces || []);
-      setTrendingSpaces(trending || []);
-      
-      // TODO: Nearby spaces with geo filtering
-      setNearbySpaces([]);
-    } catch (err) {
-      console.error('Load spaces error:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  }, [loadSpaces]);
 
   const filteredSpaces = spaces.filter(space => {
     const matchesCategory = activeCategory === 'all' || space.category === activeCategory;
