@@ -276,7 +276,7 @@ export default function Feed() {
           <div className="max-w-[1040px] mx-auto px-3 lg:px-6">
             <div
               ref={tabContainerRef}
-              className="relative rounded-xl lg:rounded-2xl border border-white/[0.08] bg-gradient-to-b from-white/[0.05] to-white/[0.02] backdrop-blur-xl px-3 lg:px-6 shadow-[0_10px_28px_rgba(0,0,0,0.3)] lg:shadow-[0_20px_60px_rgba(0,0,0,0.45)]"
+              className="relative rounded-xl lg:rounded-2xl border border-white/[0.1] bg-gradient-to-b from-white/[0.06] to-white/[0.02] backdrop-blur-xl px-3 lg:px-6 shadow-[0_12px_30px_rgba(0,0,0,0.34)] lg:shadow-[0_24px_70px_rgba(0,0,0,0.5)]"
             >
               <div className="flex justify-center gap-6 lg:gap-8 py-2.5 lg:py-3">
               {FEED_TABS.map((tab, idx) => {
@@ -303,7 +303,7 @@ export default function Feed() {
                   left: underlineStyle.left,
                 }}
               />
-              <div className="border-t border-white/[0.06] py-2 flex items-center justify-between text-[10px] lg:text-[11px] text-zinc-400">
+              <div className="border-t border-white/[0.08] py-2 flex items-center justify-between text-[10px] lg:text-[11px] text-zinc-400">
                 <span className="inline-flex items-center gap-1">
                   <Clock3 className="w-3 h-3" />
                   {lastUpdated[activeTab] ? `Zuletzt aktualisiert: ${formatLastUpdated(lastUpdated[activeTab])}` : 'Noch nicht aktualisiert'}
@@ -332,7 +332,7 @@ export default function Feed() {
             const tabHasMore = td.hasMore;
 
             return (
-              <div key={tab.id} className="max-w-[1040px] mx-auto px-0 lg:px-6 py-3">
+              <div key={tab.id} className="max-w-[1040px] mx-auto px-2 lg:px-6 py-3">
                 {tabError[tab.id] && (
                   <div className="mx-3 lg:mx-0 mb-3 rounded-xl border border-amber-500/20 bg-amber-500/10 px-3 py-2.5 flex items-start gap-2">
                     <AlertTriangle className="w-4 h-4 text-amber-400 mt-0.5 flex-shrink-0" />
@@ -381,7 +381,7 @@ export default function Feed() {
                   </motion.div>
                 ) : (
                   <>
-                    <div className="space-y-2 lg:space-y-3">
+                    <div className="space-y-3 lg:space-y-4">
                       {tabVisible.map(({ post, postUser }, idx) => (
                         <FuturisticPostCard
                           key={post.id}

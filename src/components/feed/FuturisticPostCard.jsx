@@ -187,11 +187,11 @@ export default function FuturisticPostCard({
       </Suspense>
     )}
     <div
-      className="gh-card overflow-hidden rounded-2xl border border-white/[0.08] bg-gradient-to-b from-zinc-950/95 to-zinc-950/80 hover:border-white/[0.15] shadow-[0_12px_40px_rgba(0,0,0,0.45)] hover:shadow-[0_24px_60px_rgba(0,0,0,0.55)] transition-all duration-300"
+      className="gh-card overflow-hidden rounded-2xl border border-white/[0.1] bg-gradient-to-b from-zinc-950/96 to-zinc-950/84 hover:border-white/[0.2] shadow-[0_14px_45px_rgba(0,0,0,0.48)] hover:shadow-[0_28px_70px_rgba(0,0,0,0.6)] transition-all duration-300"
       {...cardOnlyHandlers}
     >
       {/* Header */}
-      <div className="px-5 pt-4 pb-2.5 flex items-center gap-3" onClick={e => e.stopPropagation()}>
+      <div className="px-5 pt-4 pb-3 flex items-center gap-3" onClick={e => e.stopPropagation()}>
         <Link to={`/Profile?id=${user?.id || user?.email || 'unknown'}`} className="flex items-center gap-3 flex-1 min-w-0">
           {user?.avatar_url ? (
             <img src={user.avatar_url} alt={getDisplayName(user)} className="w-10 h-10 rounded-full object-cover ring-[1.5px] ring-white/[0.08]" />
@@ -202,7 +202,7 @@ export default function FuturisticPostCard({
           )}
           <div className="flex-1 min-w-0">
             <p className="font-semibold text-white text-[14px] truncate leading-tight">{getDisplayName(user)}</p>
-            <p className="text-[12px] text-[var(--gh-text-muted)] mt-0.5">{formatDistanceToNow(new Date(post.created_date), { addSuffix: true, locale: de })}</p>
+            <p className="text-[12px] text-zinc-400 mt-0.5">{formatDistanceToNow(new Date(post.created_date), { addSuffix: true, locale: de })}</p>
           </div>
         </Link>
 
@@ -220,8 +220,8 @@ export default function FuturisticPostCard({
 
       {/* Content */}
       {post.content && (
-        <div className="px-5 pb-3.5">
-          <p className="text-white/90 text-[14px] leading-[1.6] whitespace-pre-wrap">
+        <div className="px-5 pb-4">
+          <p className="text-white/92 text-[14px] leading-[1.65] whitespace-pre-wrap tracking-[-0.005em]">
             {showMore || post.content.length <= 200 ? post.content : `${post.content.slice(0, 200)}...`}
           </p>
           {post.content.length > 200 && (
@@ -254,7 +254,7 @@ export default function FuturisticPostCard({
                 <img
                   src={post.media_urls[0]}
                   alt="Post media"
-                  className="w-full max-h-[500px] object-cover bg-zinc-900"
+                  className="w-full max-h-[520px] object-cover bg-zinc-900"
                   loading={index < 3 ? 'eager' : 'lazy'}
                   decoding="async"
                   onError={(e) => { e.target.style.display = 'none'; }}
@@ -313,7 +313,7 @@ export default function FuturisticPostCard({
       )}
 
       {/* Actions */}
-      <div className="px-4 py-2.5 flex items-center justify-between border-t border-white/[0.06] bg-black/20" onClick={e => e.stopPropagation()}>
+      <div className="px-4 py-2.5 flex items-center justify-between border-t border-white/[0.08] bg-black/25" onClick={e => e.stopPropagation()}>
         <div className="flex items-center gap-1">
           {/* Heart with long-press reaction picker */}
           <div className="relative">
@@ -324,7 +324,7 @@ export default function FuturisticPostCard({
               onMouseUp={heartLongHandlers.onMouseUp}
               onMouseLeave={heartLongHandlers.onMouseLeave}
               onClick={(e) => { e.stopPropagation(); if (!heartWasLongFn()) handleLike(); }}
-              className="flex items-center gap-1.5 px-2 py-2 rounded-xl transition-all active:scale-90"
+              className="flex items-center gap-1.5 px-2.5 py-2 rounded-xl transition-all active:scale-90 hover:bg-white/[0.04]"
             >
               <motion.div
                 animate={likeAnim ? { scale: [1, 1.4, 1] } : { scale: 1 }}
@@ -372,7 +372,7 @@ export default function FuturisticPostCard({
                 setShowExpanded(true);
               }
             }}
-            className="flex items-center gap-1.5 px-2 py-2 rounded-xl transition-all active:scale-90"
+            className="flex items-center gap-1.5 px-2.5 py-2 rounded-xl transition-all active:scale-90 hover:bg-white/[0.04]"
           >
             <MessageCircle className="w-5 h-5 text-zinc-400" />
             {post.comments_count > 0 && (
@@ -382,7 +382,7 @@ export default function FuturisticPostCard({
 
           <button
             onClick={handleShare}
-            className="flex items-center gap-1.5 px-2 py-2 rounded-xl transition-all active:scale-90 text-zinc-400"
+            className="flex items-center gap-1.5 px-2.5 py-2 rounded-xl transition-all active:scale-90 text-zinc-400 hover:bg-white/[0.04]"
           >
             <Share2 className="w-5 h-5" />
           </button>
@@ -392,7 +392,7 @@ export default function FuturisticPostCard({
           animate={bookmarkAnim ? { scale: [1, 1.25, 1] } : { scale: 1 }}
           transition={{ duration: 0.25 }}
           onClick={handleBookmark}
-          className={`p-2 rounded-xl transition-all active:scale-90 ${isBookmarked ? 'text-yellow-400' : 'text-zinc-400'}`}
+          className={`p-2 rounded-xl transition-all active:scale-90 hover:bg-white/[0.04] ${isBookmarked ? 'text-yellow-400' : 'text-zinc-400'}`}
         >
           <Bookmark className={`w-5 h-5 ${isBookmarked ? 'fill-current' : ''}`} />
         </motion.button>
